@@ -52,21 +52,26 @@ class _RegistrationState extends State<Registration> {
       print('Register call');
       print(user_id);
 
-      DocumentReference documentReference = Firestore.instance.document('USER/${user_id}');
+      DocumentReference documentReference =
+          Firestore.instance.document('USER/${user_id}');
       Map<String, String> info = <String, String>{
         'name': '$_username',
         'email': '$_email',
         'phone_no': '$_phone_no',
-        'Id':generate('1234567890',8),
-        'Vip':'0',
-        'Coins':'0',
-        'Binded':'0',
-        'followers':'0',
-        'following':'0',
+        'Id': generate('1234567890', 8),
+        'Vip': '0',
+        'Coins': '0',
+        'Binded': '0',
+        'followers': '0',
+        'following': '0',
       };
       await documentReference.setData(info).whenComplete(() {
         Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Check_Status(auth: auth())));});
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Check_Status(auth: auth())));
+      });
     } catch (e) {
       print('Register catch ');
       print(e.message);
@@ -143,6 +148,7 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: Stack(
       children: <Widget>[
@@ -151,153 +157,181 @@ class _RegistrationState extends State<Registration> {
             child: ListView(
               children: <Widget>[
                 Center(
-                  child: Text(
-                    'ZUCI',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 40.0),
-                  ),
-                ),
+                    // child: Image.asset("assets/Image/IMG_4073.jpg"),
+                    ),
                 Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: EdgeInsets.only(
+                    left: size.height * .015,
+                    right: size.height * .015,
+                    top: size.height * .05,
+                  ),
                   child: Card(
-                    elevation: 5.0,
+                    elevation: 3.0,
                     child: Column(
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Center(
-                            child: Text(
-                              'Register',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20.0),
-                            ),
-                          ),
+                        Container(
+                          height: size.height*.16,
+                          width: double.infinity,
+                          child: Image.asset("assets/Image/IMG_4073.jpg",fit: BoxFit.cover,),
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(20.0),
+                        //   child: Center(
+                        //     child: Text(
+                        //       'Register',
+                        //       style: TextStyle(
+                        //           fontWeight: FontWeight.bold, fontSize: 20.0),
+                        //     ),
+                        //   ),
+                        // ),
                         Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: EdgeInsets.only(
+                            left: size.height * .02,
+                            right: size.height * .02,
+                            top: size.height * .01,
+                            bottom: size.height * .01,
+                          ),
                           child: TextFormField(
                             decoration: InputDecoration(
                               labelText: 'Email',
-                              icon: Icon(
+                              prefixIcon: Icon(
                                 Icons.email,
                                 color: Colors.purpleAccent,
-                                size: 35.0,
+                                size: size.height * .03,
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(8.0)),
                                 borderSide: BorderSide(color: Colors.black38),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(8.0)),
                                 borderSide: BorderSide(color: Colors.black87),
                               ),
                             ),
-                            validator: (value) => value.isEmpty? 'Email cann\'t empty' : null,
+                            validator: (value) =>
+                                value.isEmpty ? 'Email cann\'t empty' : null,
                             onSaved: (value) => _email = value.trim(),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: EdgeInsets.only(
+                            left: size.height * .02,
+                            right: size.height * .02,
+                            top: size.height * .01,
+                            bottom: size.height * .01,
+                          ),
                           child: TextFormField(
                             decoration: InputDecoration(
                               labelText: 'Phone number',
-                              icon: Icon(
+                              prefixIcon: Icon(
                                 Icons.phone,
                                 color: Colors.purpleAccent,
-                                size: 35.0,
+                                size: size.height * .03,
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(8.0)),
                                 borderSide: BorderSide(color: Colors.black38),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(8.0)),
                                 borderSide: BorderSide(color: Colors.black87),
                               ),
                             ),
-                            validator: (value) => value.isEmpty
-                                ? 'Password cann\'t empty'
-                                : null,
+                            validator: (value) =>
+                                value.isEmpty ? 'Password cann\'t empty' : null,
                             onSaved: (value) => _phone_no = value.trim(),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: EdgeInsets.only(
+                            left: size.height * .02,
+                            right: size.height * .02,
+                            top: size.height * .01,
+                            bottom: size.height * .01,
+                          ),
                           child: TextFormField(
                             decoration: InputDecoration(
                               labelText: 'Username',
-                              icon: Icon(
+                              prefixIcon: Icon(
                                 Icons.supervised_user_circle,
                                 color: Colors.purpleAccent,
-                                size: 35.0,
+                                size: size.height * .03,
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(8.0)),
                                 borderSide: BorderSide(color: Colors.black38),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(8.0)),
                                 borderSide: BorderSide(color: Colors.black87),
                               ),
                             ),
-                            validator: (value) => value.isEmpty
-                                ? 'Username cann\'t empty'
-                                : null,
+                            validator: (value) =>
+                                value.isEmpty ? 'Username cann\'t empty' : null,
                             onSaved: (value) => _username = value.trim(),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: EdgeInsets.only(
+                            left: size.height * .02,
+                            right: size.height * .02,
+                            top: size.height * .01,
+                            bottom: size.height * .01,
+                          ),
                           child: TextFormField(
                             decoration: InputDecoration(
                               labelText: 'Password',
-                              icon: Icon(
+                              prefixIcon: Icon(
                                 Icons.lock,
                                 color: Colors.purpleAccent,
-                                size: 35.0,
+                                size: size.height * .03,
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(8.0)),
                                 borderSide: BorderSide(color: Colors.black38),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(8.0)),
                                 borderSide: BorderSide(color: Colors.black87),
                               ),
                             ),
                             obscureText: true,
-                            validator: (value) => value.isEmpty
-                                ? 'Password cann\'t empty'
-                                : null,
+                            validator: (value) =>
+                                value.isEmpty ? 'Password cann\'t empty' : null,
                             onSaved: (value) => _password = value.trim(),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: EdgeInsets.only(
+                            left: size.height * .02,
+                            right: size.height * .02,
+                            top: size.height * .01,
+                            bottom: size.height * .01,
+                          ),
                           child: TextFormField(
                             decoration: InputDecoration(
                               labelText: 'Confirm Password',
-                              icon: Icon(
+                              prefixIcon: Icon(
                                 Icons.lock,
                                 color: Colors.purpleAccent,
-                                size: 35.0,
+                                size: size.height * .03,
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(8.0)),
                                 borderSide: BorderSide(color: Colors.black38),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(8.0)),
                                 borderSide: BorderSide(color: Colors.black87),
                               ),
                             ),
@@ -308,39 +342,43 @@ class _RegistrationState extends State<Registration> {
                           ),
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 30.0),
+                          padding: EdgeInsets.only(
+                            left: size.height * .04,
+                            right: size.height * .04,
+                            top: size.height * .02,
+                            bottom: size.height * .03,
+                          ),
                           child: GestureDetector(
                             onTap: () {
                               validateAndRegister();
                               print('register$_email,$_password');
                             },
                             child: Container(
-                              height: 50.0,
+                              height: size.height * .07,
                               child: Center(
                                 child: Text(
-                                  'Register',
+                                  'REGISTER',
                                   style: TextStyle(
-                                      fontSize: 20.0,
+                                      color: Colors.white,
+                                      fontSize: 18.0,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  border: Border.all(
-                                    color: Colors.white10,
-                                  ),
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      stops: [
-                                        0.2,
-                                        1
-                                      ],
-                                      colors: [
-                                        Colors.purple,
-                                        Colors.pinkAccent
-                                      ])),
+                                borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(
+                                  color: Colors.white10,
+                                ),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: [0.2, 1],
+                                  colors: [
+                                    Color(0xFFB44EB1),
+                                    Color(0xFFDA4D91),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -349,22 +387,25 @@ class _RegistrationState extends State<Registration> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: EdgeInsets.all(size.height * .005),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'You have an account?',
-                        style: TextStyle(fontSize: 20.0),
+                        'You have an Account? ',
+                        style: TextStyle(),
                       ),
                       GestureDetector(
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Text(
-                          'LogIn',
-                          style: TextStyle(
-                              color: Colors.purpleAccent, fontSize: 20.0),
+                        child: Container(
+                          child: Text(
+                            'LOGIN',
+                            style: TextStyle(
+                              color: Color(0xFFB44EB1),
+                            ),
+                          ),
                         ),
                       )
                     ],
