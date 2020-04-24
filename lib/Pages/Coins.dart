@@ -64,7 +64,7 @@ class _CoinsState extends State<Coins> {
                         // color: Colors.red,
                         height:size.height * .08,
                         width: size.width * .15,
-                        child: Image.asset("assets/coins.png"),
+                        child: Image.asset("assets/Image/coins.png"),
                       ),
                       Container(
                         margin: EdgeInsets.all(8),

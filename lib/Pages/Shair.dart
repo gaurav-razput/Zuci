@@ -12,7 +12,7 @@ class _ShairState extends State<Shair> {
       color: Colors.white,
       child: CircleAvatar(
         backgroundColor: Colors.white,
-        backgroundImage: AssetImage("assets/$name"),
+        backgroundImage: AssetImage("assets/Image/$name"),
       ),
     );
   }

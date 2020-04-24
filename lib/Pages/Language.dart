@@ -33,6 +33,7 @@ class _LanguageState extends State<Language> {
   }
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
               child: SafeArea(
@@ -42,9 +43,11 @@ class _LanguageState extends State<Language> {
                     crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  color: Colors.red,
-                  height: 80,
-                  width: 80,
+                  
+                 
+                  height:size.height*.1,
+                  width: size.width*.2,
+                  child: Image.asset("assets/Image/lang.png"),
               ),
               Container(
                   margin: EdgeInsets.only(top:10,bottom: 10),

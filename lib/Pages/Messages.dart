@@ -6,46 +6,56 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: PreferredSize(
           child: Container(
+            padding: EdgeInsets.only(top: size.height * .025),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.2, 1],
-                  colors: [Colors.purple, Colors.pinkAccent]),
-            ),
-            child: SafeArea(
-              child: Column(
-                children: <Widget>[
-                  TabBar(
-                    tabs: [
-                      Container(
-                        child: Text(
-                          'Messages',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          'Video History',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ),
-                    ],
-                    labelColor: Colors.white,
-                    indicatorColor: Colors.white,
-                  )
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [
+                  0.2,
+                  1
                 ],
-              ),
-            ),
+                    colors: [
+                  Color(0xFFB44EB1),
+                  Color(0xFFDA4D91),
+                ])),
+            child: SafeArea(
+                child: Column(
+              children: <Widget>[
+                TabBar(
+                  tabs: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: size.height * .02),
+                      child: Text(
+                        'MESSAGES',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(bottom: size.height * .02),
+                      child: Text(
+                        'VIDEO HISTORY',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    ),
+                   
+                  ],
+                  //labelColor: Colors.white,
+                  indicatorColor: Colors.white,
+                )
+              ],
+            )),
           ),
-          preferredSize: Size.fromHeight(32.0),
+          preferredSize: Size.fromHeight(size.height * .08),
         ),
         body: TabBarView(
           children: <Widget>[

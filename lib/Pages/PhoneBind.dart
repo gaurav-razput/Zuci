@@ -27,7 +27,7 @@ class _PhoneBindState extends State<PhoneBind> {
                 children: <Widget>[
                   Container(
                     height: size.height * .35,
-                    child: Image.asset("assets/handphone.png"),
+                    child: Image.asset("assets/Image/handphone.png"),
                   ),
                   Padding(
                     padding: EdgeInsets.all(size.height * .03),
