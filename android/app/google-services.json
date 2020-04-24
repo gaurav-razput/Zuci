@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "256837639535",
+    "firebase_url": "https://zuci-e2af2.firebaseio.com",
+    "project_id": "zuci-e2af2",
+    "storage_bucket": "zuci-e2af2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256837639535:android:83b619a4b5d03b1a519c9a",
+        "android_client_info": {
+          "package_name": "com.example.zuci"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "256837639535-dm4uebeg445604a0eh9h8itin495kj6u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.zuci",
+            "certificate_hash": "3167dbc1ec86d6de82f653bf98af52515affbc86"
+          }
+        },
+        {
+          "client_id": "256837639535-dhjpscspkvu8vehrqsbcbsqhcef4ea8m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgtfaVGXJ3VUK9f1uYAwhE8pDdU4rRAoM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256837639535-dhjpscspkvu8vehrqsbcbsqhcef4ea8m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "256837639535-hqf77blphoqt71oq850bctl1t5onhp36.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.zuci"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
