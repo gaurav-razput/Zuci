@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nanoid/generate.dart';
 
 import 'package:zuci/Firebase/Authentication.dart';
 import 'package:zuci/Pages/check_auth_page.dart';
@@ -55,9 +56,16 @@ class _RegistrationState extends State<Registration> {
       Map<String, String> info = <String, String>{
         'name': '$_username',
         'email': '$_email',
-        'phone_no': '$_phone_no'
+        'phone_no': '$_phone_no',
+        'Id':generate('1234567890',8),
+        'Vip':'0',
+        'Coins':'0',
+        'Binded':'0',
+        'followers':'0',
+        'following':'0',
       };
       await documentReference.setData(info).whenComplete(() {
+        Navigator.pop(context);
         Navigator.push(context, MaterialPageRoute(builder: (context) => Check_Status(auth: auth())));});
     } catch (e) {
       print('Register catch ');

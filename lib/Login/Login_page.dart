@@ -264,7 +264,7 @@ class _LoginPAgeState extends State<LoginPAge> {
                                     height: 55.0,
                                     width: 55.0,
                                     child:
-                                    Image.asset("assets/Image/image8-2.jpg"),
+                                    Image.asset("assets/Image/image8-2.png"),
                                   ),
                                 ),
                               ],
