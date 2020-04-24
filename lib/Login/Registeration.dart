@@ -51,19 +51,14 @@ class _RegistrationState extends State<Registration> {
       print('Register call');
       print(user_id);
 
-      DocumentReference documentReference =
-          Firestore.instance.document('USER/${user_id}');
+      DocumentReference documentReference = Firestore.instance.document('USER/${user_id}');
       Map<String, String> info = <String, String>{
         'name': '$_username',
         'email': '$_email',
         'phone_no': '$_phone_no'
       };
       await documentReference.setData(info).whenComplete(() {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Check_Status(auth: auth())));
-      });
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Check_Status(auth: auth())));});
     } catch (e) {
       print('Register catch ');
       print(e.message);
@@ -191,8 +186,7 @@ class _RegistrationState extends State<Registration> {
                                 borderSide: BorderSide(color: Colors.black87),
                               ),
                             ),
-                            validator: (value) =>
-                                value == _email ? 'Email cann\'t empty' : null,
+                            validator: (value) => value.isEmpty? 'Email cann\'t empty' : null,
                             onSaved: (value) => _email = value.trim(),
                           ),
                         ),
@@ -217,7 +211,7 @@ class _RegistrationState extends State<Registration> {
                                 borderSide: BorderSide(color: Colors.black87),
                               ),
                             ),
-                            validator: (value) => value == _phone_no
+                            validator: (value) => value.isEmpty
                                 ? 'Password cann\'t empty'
                                 : null,
                             onSaved: (value) => _phone_no = value.trim(),
@@ -244,7 +238,7 @@ class _RegistrationState extends State<Registration> {
                                 borderSide: BorderSide(color: Colors.black87),
                               ),
                             ),
-                            validator: (value) => value == _username
+                            validator: (value) => value.isEmpty
                                 ? 'Username cann\'t empty'
                                 : null,
                             onSaved: (value) => _username = value.trim(),
@@ -272,7 +266,7 @@ class _RegistrationState extends State<Registration> {
                               ),
                             ),
                             obscureText: true,
-                            validator: (value) => value == _password
+                            validator: (value) => value.isEmpty
                                 ? 'Password cann\'t empty'
                                 : null,
                             onSaved: (value) => _password = value.trim(),
