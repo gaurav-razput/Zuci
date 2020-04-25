@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zuci/Firebase/Authentication.dart';
+import 'package:zuci/Pages/NxtVideoChat.dart';
 import 'package:zuci/Pages/check_auth_page.dart';
 
 class VideoChat extends StatefulWidget {
@@ -192,78 +193,89 @@ class _VideoChatState extends State<VideoChat> {
                       itemCount: 30,
                       itemBuilder: (context, i) => LayoutBuilder(
                         builder: (ctx, constraint) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Color(0xFFF0F0F0),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  height: constraint.maxHeight *
-                                      .75, //size.height * .23,
-                                  width: double.infinity,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                                      fit: BoxFit.cover,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NxtVideoChat(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color(0xFFF0F0F0),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    height: constraint.maxHeight *
+                                        .75, //size.height * .23,
+                                    width: double.infinity,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.all(
-                                      constraint.maxHeight * .025),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Container(
-                                        //color: Colors.red,
-                                        width: constraint.maxWidth * .6,
-                                        child: Text(
-                                          "Katty Perry",
-                                          overflow: TextOverflow.ellipsis,
+                                  Container(
+                                    margin: EdgeInsets.all(
+                                        constraint.maxHeight * .025),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Container(
+                                          //color: Colors.red,
+                                          width: constraint.maxWidth * .6,
+                                          child: Text(
+                                            "Katty Perry",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color: Color(0xFF383838),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          "24",
                                           style: TextStyle(
-                                            color: Color(0xFF383838),
                                             fontSize: 18,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
-                                      ),
-                                      Text(
-                                        "24",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: constraint.maxHeight * .01,
+                                  ),
+                                  Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Text(
+                                          "🇮🇳  India",
                                         ),
-                                      ),
-                                    ],
+                                        Text(
+                                          "Online",
+                                          style: TextStyle(
+                                              color: Colors.redAccent),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: constraint.maxHeight * .01,
-                                ),
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Text(
-                                        "🇮🇳  India",
-                                      ),
-                                      Text(
-                                        "Online",
-                                        style:
-                                            TextStyle(color: Colors.redAccent),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         },
@@ -291,74 +303,87 @@ class _VideoChatState extends State<VideoChat> {
                 itemCount: 30,
                 itemBuilder: (context, i) => LayoutBuilder(
                   builder: (ctx, constraint) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color(0xFFF0F0F0),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10)),
-                            height:
-                                constraint.maxHeight * .75, //size.height * .23,
-                            width: double.infinity,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                                fit: BoxFit.cover,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NxtVideoChat(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color(0xFFF0F0F0),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10)),
+                              height: constraint.maxHeight *
+                                  .75, //size.height * .23,
+                              width: double.infinity,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.all(constraint.maxHeight * .025),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Container(
-                                  //color: Colors.red,
-                                  width: constraint.maxWidth * .6,
-                                  child: Text(
-                                    "Katty Perry",
-                                    overflow: TextOverflow.ellipsis,
+                            Container(
+                              margin:
+                                  EdgeInsets.all(constraint.maxHeight * .025),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                    //color: Colors.red,
+                                    width: constraint.maxWidth * .6,
+                                    child: Text(
+                                      "Katty Perry",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: Color(0xFF383838),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "24",
                                     style: TextStyle(
-                                      color: Color(0xFF383838),
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  "24",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: constraint.maxHeight * .01,
+                            ),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(
+                                    "🇮🇳  India",
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    "Online",
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: constraint.maxHeight * .01,
-                          ),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Text(
-                                  "🇮🇳  India",
-                                ),
-                                Text(
-                                  "Online",
-                                  style: TextStyle(color: Colors.redAccent),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -383,74 +408,87 @@ class _VideoChatState extends State<VideoChat> {
                 itemCount: 30,
                 itemBuilder: (context, i) => LayoutBuilder(
                   builder: (ctx, constraint) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color(0xFFF0F0F0),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10)),
-                            height:
-                                constraint.maxHeight * .75, //size.height * .23,
-                            width: double.infinity,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                "https://images.pexels.com/photos/247120/pexels-photo-247120.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                                fit: BoxFit.cover,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NxtVideoChat(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color(0xFFF0F0F0),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10)),
+                              height: constraint.maxHeight *
+                                  .75, //size.height * .23,
+                              width: double.infinity,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  "https://images.pexels.com/photos/247120/pexels-photo-247120.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.all(constraint.maxHeight * .025),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Container(
-                                  //color: Colors.red,
-                                  width: constraint.maxWidth * .6,
-                                  child: Text(
-                                    "Katty Perry",
-                                    overflow: TextOverflow.ellipsis,
+                            Container(
+                              margin:
+                                  EdgeInsets.all(constraint.maxHeight * .025),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                    //color: Colors.red,
+                                    width: constraint.maxWidth * .6,
+                                    child: Text(
+                                      "Katty Perry",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: Color(0xFF383838),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "24",
                                     style: TextStyle(
-                                      color: Color(0xFF383838),
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  "24",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: constraint.maxHeight * .01,
+                            ),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(
+                                    "🇮🇳  India",
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    "Online",
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: constraint.maxHeight * .01,
-                          ),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Text(
-                                  "🇮🇳  India",
-                                ),
-                                Text(
-                                  "Online",
-                                  style: TextStyle(color: Colors.redAccent),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -463,8 +501,3 @@ class _VideoChatState extends State<VideoChat> {
     );
   }
 }
-
-//top: size.height * .03
-
-//                   "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-//                   "https://images.pexels.com/photos/247120/pexels-photo-247120.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
