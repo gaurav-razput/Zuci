@@ -1,13 +1,30 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:zuci/Firebase/Authentication.dart';
 import 'package:zuci/Pages/check_auth_page.dart';
 import 'package:zuci/Pages/main_page.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,7 +39,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyhomePage extends StatefulWidget {
-
   MyhomePage({Key key, this.auth, this.userId, this.logoutCallback})
       : super(key: key);
 
@@ -34,7 +50,6 @@ class MyhomePage extends StatefulWidget {
 }
 
 class _MyhomePageState extends State<MyhomePage> {
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
