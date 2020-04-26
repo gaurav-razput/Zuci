@@ -64,14 +64,27 @@ class _LoginPAgeState extends State<LoginPAge> {
   }
 
   Widget _showCircularProgress() {
+    Size size = MediaQuery.of(context).size;
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.black12,
+          backgroundBlendMode: BlendMode.darken,
+
+        ),
+        child: Center(
+            child: CircularProgressIndicator()
+        ),
+        height: size.height,
+        width: size.width,
+      );
     }
     return Container(
       height: 0.0,
       width: 0.0,
     );
   }
+
 
   Widget showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {

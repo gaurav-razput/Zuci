@@ -64,6 +64,7 @@ class _RegistrationState extends State<Registration> {
         'Binded': '0',
         'followers': '0',
         'following': '0',
+        'uid':user_id
       };
       await documentReference.setData(info).whenComplete(() {
         Navigator.pop(context);
@@ -110,41 +111,26 @@ class _RegistrationState extends State<Registration> {
   }
 
   Widget _showCircularProgress() {
+    Size size = MediaQuery.of(context).size;
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.black12,
+          backgroundBlendMode: BlendMode.darken,
+
+        ),
+        child: Center(
+            child: CircularProgressIndicator()
+        ),
+        height: size.height,
+        width: size.width,
+      );
     }
     return Container(
       height: 0.0,
       width: 0.0,
     );
   }
-
-//  Widget custom_text_field(name, values, Icons) {
-//    return Padding(
-//      padding: const EdgeInsets.all(20.0),
-//      child: TextFormField(
-//        decoration: InputDecoration(
-//          labelText: name,
-//          icon: Icon(
-//            Icons,
-//            color: Colors.purpleAccent,
-//            size: 35.0,
-//          ),
-//          focusedBorder: OutlineInputBorder(
-//            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-//            borderSide: BorderSide(color: Colors.black38),
-//          ),
-//          enabledBorder: OutlineInputBorder(
-//            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-//            borderSide: BorderSide(color: Colors.black87),
-//          ),
-//        ),
-//        validator: (value) => value.isEmpty ? '$name can\'t be empty' : null,
-//        onSaved: (value) => values = value.trim(),
-//        obscureText:  name =="Password" ?true:false,
-//      ),
-//    );
-//  }
 
   @override
   Widget build(BuildContext context) {
