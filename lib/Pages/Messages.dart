@@ -14,22 +14,23 @@ class _MessagesState extends State<Messages> {
   bool loading;
   String user_uid;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  cur_uid()async{
-    FirebaseUser user = await _firebaseAuth.currentUser().whenComplete((){
+  cur_uid() async {
+    FirebaseUser user = await _firebaseAuth.currentUser().whenComplete(() {
       setState(() {
-       loading=false;
+        loading = false;
       });
     });
 
-   user_uid=user.uid;
+    user_uid = user.uid;
   }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     cur_uid();
-    loading =true;
+    loading = true;
   }
+
   Widget _showCircularProgress() {
     Size size = MediaQuery.of(context).size;
     if (loading) {
@@ -37,11 +38,8 @@ class _MessagesState extends State<Messages> {
         decoration: BoxDecoration(
           color: Colors.black12,
           backgroundBlendMode: BlendMode.darken,
-
         ),
-        child: Center(
-            child: CircularProgressIndicator()
-        ),
+        child: Center(child: CircularProgressIndicator()),
         height: size.height,
         width: size.width,
       );
@@ -54,54 +52,62 @@ class _MessagesState extends State<Messages> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: PreferredSize(
           child: Container(
+            padding: EdgeInsets.only(top: size.height * .025),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.2, 1],
-                  colors: [Colors.purple, Colors.pinkAccent]),
-            ),
-            child: SafeArea(
-              child: Column(
-                children: <Widget>[
-                  TabBar(
-                    tabs: [
-                      Container(
-                        child: Text(
-                          'Messages',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          'Video History',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ),
-                    ],
-                    labelColor: Colors.white,
-                    indicatorColor: Colors.white,
-                  )
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [
+                  0.2,
+                  1
                 ],
-              ),
-            ),
-          ),
-          preferredSize: Size.fromHeight(32.0),
-        ),
-        body: Stack(
-
-          children: <Widget>[
-            TabBarView(
+                    colors: [
+                  Color(0xFFB44EB1),
+                  Color(0xFFDA4D91),
+                ])),
+            child: SafeArea(
+                child: Column(
               children: <Widget>[
-                // for Messeges
+                TabBar(
+                  tabs: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: size.height * .02),
+                      child: Text(
+                        'MESSAGES',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(bottom: size.height * .02),
+                      child: Text(
+                        'VIDEO HISTORY',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    ),
+                  ],
+                  //labelColor: Colors.white,
+                  indicatorColor: Colors.white,
+                )
+              ],
+            )),
+          ),
+          preferredSize: Size.fromHeight(size.height * .08),
+        ),
+        body: TabBarView(
+          children: <Widget>[
+            // for Messeges
+            Stack(
+              children: <Widget>[
                 StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance.collection("USER").snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
                       return new Text('Error: ${snapshot.error}');
                     }
@@ -123,106 +129,174 @@ class _MessagesState extends State<Messages> {
                       return ListView.builder(
                         itemCount: snapshot.data.documents.length,
                         itemBuilder: (_, index) {
-                          User rec=User(
+                          User rec = User(
                             name: snapshot.data.documents[index].data["name"],
-                            uid: snapshot.data.documents[index].data["uid"]
+                            uid: snapshot.data.documents[index].data["uid"],
                           );
 
-                          return ListTile(
-                              title:Text(snapshot.data.documents[index].data["name"]),
-                              subtitle:Text(snapshot.data.documents[index].data["Id"]),
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Chat_page(receiver: rec,)));
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Chat_page(
+                                    receiver: rec,
+                                  ),
+                                ),
+                              );
                             },
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        margin: EdgeInsets.only(right: 6),
+                                        child: CircleAvatar(
+                                          radius: 30,
+                                          backgroundImage: NetworkImage(
+                                              "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Text(
+                                                    snapshot
+                                                        .data
+                                                        .documents[index]
+                                                        .data["name"],
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16),
+                                                  ),
+                                                  Text(
+                                                    "11:23 AM",
+                                                    style: TextStyle(
+                                                        color: Colors.black45),
+                                                  ),
+                                                ],
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 2.0),
+                                                child: Text(
+                                                  snapshot.data.documents[index]
+                                                      .data["Id"],
+                                                  style: TextStyle(
+                                                      color: Colors.black45,
+                                                      fontSize: 14.0,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
-
                         },
                       );
                     }
                   },
                 ),
-                //For Video History
-                ListView.builder(
-                  itemCount: 8,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Chat_page()));
-                      },
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(right: 6),
-                                  child: CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: NetworkImage(
-                                        "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                _showCircularProgress(),
+              ],
+            ),
+            //For Video History
+            ListView.builder(
+              itemCount: 8,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {},
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(right: 6),
+                              child: CircleAvatar(
+                                radius: 30,
+                                backgroundImage: NetworkImage(
+                                    "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              "HelloWorld",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 16),
-                                            ),
-                                            Text(
-                                              "11:23 AM",
-                                              style: TextStyle(color: Colors.black45),
-                                            ),
-                                          ],
+                                        Text(
+                                          "HelloWorld",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16),
                                         ),
-                                        Row(
-                                          children: <Widget>[
-                                            Padding(
-                                                padding: const EdgeInsets.only(
-                                                  top: 2.0,
-                                                ),
-                                                child: Icon(
-                                                  Icons.videocam,
-                                                  color: Color(0xFFD34B96),
-                                                )),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 2.0, left: 4.0),
-                                              child: Text(
-                                                "Incoming video call",
-                                                style: TextStyle(
-                                                    color: Colors.black45,
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.w600),
-                                              ),
-                                            ),
-                                          ],
+                                        Text(
+                                          "11:23 AM",
+                                          style:
+                                              TextStyle(color: Colors.black45),
                                         ),
                                       ],
                                     ),
-                                  ),
+                                    Row(
+                                      children: <Widget>[
+                                        Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 2.0,
+                                            ),
+                                            child: Icon(
+                                              Icons.videocam,
+                                              color: Color(0xFFD34B96),
+                                            )),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 2.0, left: 4.0),
+                                          child: Text(
+                                            "Incoming video call",
+                                            style: TextStyle(
+                                                color: Colors.black45,
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    );
-                  },
-                ),
-              ],
+                    ],
+                  ),
+                );
+              },
             ),
-    _showCircularProgress(),
           ],
         ),
       ),
