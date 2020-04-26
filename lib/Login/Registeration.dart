@@ -46,7 +46,6 @@ class _RegistrationState extends State<Registration> {
   }
 
   void Register(user_id) async {
-    Firestore db = Firestore.instance;
 
     try {
       print('Register call');
