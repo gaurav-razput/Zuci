@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:zuci/Firebase/Authentication.dart';
 import 'package:zuci/Pages/Coins.dart';
 import 'package:zuci/Pages/PhoneBind.dart';
 import 'package:zuci/Pages/Settings.dart';
@@ -11,6 +14,63 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
+
+
+  Widget _showCircularProgress() {
+    Size size = MediaQuery.of(context).size;
+    if (loading) {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.black12,
+          backgroundBlendMode: BlendMode.darken,
+
+        ),
+        child: Center(
+            child: CircularProgressIndicator()
+        ),
+        height: size.height,
+        width: size.width,
+      );
+    }
+    return Container(
+      height: 0.0,
+      width: 0.0,
+    );
+  }
+
+
+  String name,gmail,id,coin,binded,followers,following,vip,phone_no;
+  bool loading=true;
+
+  void getuserdata() async
+  {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    print(user.uid);
+    var document = await Firestore.instance.collection('USER').document(user.uid);
+    document.get().then((document){
+      name = document['name'];
+      gmail = document['gmail'];
+      id=document['Id'];
+      coin=document['Coins'];
+      binded=document['Binded'];
+      followers=document['followers'];
+      following=document['following'];
+      vip=document['Vip'];
+      phone_no=document['phone_no'];
+    }).whenComplete((){
+      setState(() {
+        loading=false;
+      });
+    });
+
+  }
+  @override
+  void initState() {
+    super.initState();
+    getuserdata();
+
+  }
   _neverSatisfied() {
     return showDialog(
       context: context,
@@ -24,7 +84,7 @@ class _ProfileState extends State<Profile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('id:567565656'),
+                    Text('Id:$id'),
                     MaterialButton(
                       onPressed: () {},
                       height: 30,
@@ -42,7 +102,7 @@ class _ProfileState extends State<Profile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('id:567565656'),
+                    Text("Id:$id"),
                     MaterialButton(
                       onPressed: () {},
                       height: 30,
@@ -163,15 +223,15 @@ class _ProfileState extends State<Profile> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Container(child: Text("0 Followers")),
-                    Container(child: Text("0 Following"))
+                    Container(child: Text("$followers Followers")),
+                    Container(child: Text("$following Following"))
                   ],
                 ),
                 options(Icons.attach_money, "VIP", 1),
                 options(Icons.attach_money, "Get Coins", 2),
                 options(Icons.person, "Acount Info", 3),
                 options(Icons.phone_iphone, "Phone Bonding", 4),
-                options(Icons.share, "Shair", 5),
+                options(Icons.share, "Share", 5),
                 options(Icons.settings, "Setting", 6),
               ],
             ),
@@ -195,21 +255,21 @@ class _ProfileState extends State<Profile> {
                     Container(
                       margin: EdgeInsets.all(4),
                       child: Text(
-                        "Name",
+                        "$name",
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
                     Container(
                       margin: EdgeInsets.all(4),
                       child: Text(
-                        "id:67567645",
+                        "Id:$id",
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
                     Container(
                       margin: EdgeInsets.all(4),
                       child: Text(
-                        "⭐ 250",
+                        "⭐ $coin",
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     )
@@ -217,9 +277,10 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
+            _showCircularProgress(),
           ],
-        ),
-      ),
+        ),//Stack
+      ),//sinlechildscrollview
     );
   }
 }

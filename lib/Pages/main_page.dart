@@ -74,14 +74,7 @@ class _MainPageState extends State<MainPage> {
 //            Column(
 //              children: <Widget>[
 //                Center(child: Text("LIVE")),
-//                Center(
-//                  child: FlatButton(
-//                    child: Text('LogOut'),
-//                    onPressed: (){
-//                      auth().signOut();
-//                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Check_Status(auth: auth())));
-//                    },
-//                  ),
+//
 //                )
 //
 //              ],
