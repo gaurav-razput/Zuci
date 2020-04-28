@@ -4,9 +4,11 @@ import 'package:zuci/Call/call_method.dart';
 import 'package:zuci/Call/call_method2.dart';
 import 'package:zuci/Call/call_model.dart';
 import 'package:zuci/Call/video_call/call-screen.dart';
+import 'package:zuci/Permissions.dart';
 
 class PickupScreen extends StatelessWidget {
   final Call call;
+  // ignore: non_constant_identifier_names
   final user_uid;
   final CallMethods callMethods = CallMethods();
 
@@ -59,16 +61,16 @@ class PickupScreen extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.call),
                   color: Colors.green,
-//                  onPressed: () async =>
-//                  await Permissions.cameraAndMicrophonePermissionsGranted()
-//                      ? Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) => CallScreen(call: call),
-//                    ),
-//                  )
-//                      : {},
-                onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>CallScreen(call:call,user_uid: user_uid,))),
+                  onPressed: () async =>
+                  await Permissions.cameraAndMicrophonePermissionsGranted()
+                      ? Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CallScreen(call: call),
+                    ),
+                  )
+                      : {},
+//                onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>CallScreen(call:call,user_uid: user_uid,))),
                 ),
               ],
             ),

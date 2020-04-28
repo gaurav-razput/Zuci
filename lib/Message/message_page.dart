@@ -5,6 +5,7 @@ import 'package:zuci/Firebase/Authentication.dart';
 import 'package:zuci/Firebase/Database.dart';
 import 'package:zuci/Firebase/user_model.dart';
 import 'package:zuci/Message/message_model.dart';
+import 'package:zuci/Permissions.dart';
 
 class Chat_page extends StatefulWidget {
 
@@ -60,19 +61,18 @@ class _Chat_pageState extends State<Chat_page> {
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: GestureDetector(
-                onTap: (){
-                  CallUtils.dial(
-                    from: sender,
-                    to: widget.receiver,
-                    context: context
-                  );
-                },
-                  child: Icon(
-                Icons.video_call,
-                size: 30.0,
-              ),
-
+              child:   IconButton(
+                icon: Icon(
+                  Icons.video_call,
+                ),
+                onPressed: () async =>
+                await Permissions.cameraAndMicrophonePermissionsGranted()
+                    ? CallUtils.dial(
+                  from: sender,
+                  to: widget.receiver,
+                  context: context,
+                )
+                    : {},
               ),
             ),
             Padding(
