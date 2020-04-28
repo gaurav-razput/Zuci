@@ -19,53 +19,70 @@ class _VideoChatState extends State<VideoChat> {
       child: Scaffold(
         appBar: PreferredSize(
           child: Container(
-            padding: EdgeInsets.only(top: size.height * .025),
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [
-                  0.2,
-                  1
-                ],
-                    colors: [
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.2, 1],
+                colors: [
                   Color(0xFFB44EB1),
                   Color(0xFFDA4D91),
-                ])),
+                ],
+              ),
+            ),
             child: SafeArea(
-                child: Column(
-              children: <Widget>[
-                TabBar(
-                  tabs: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: size.height * .02),
-                      child: Text(
-                        'LIVE',
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: size.height * .02),
-                      child: Text(
-                        'RANDOM',
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: size.height * .02),
-                      child: Text(
-                        'NEW',
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ),
-                  ],
-                  //labelColor: Colors.white,
-                  indicatorColor: Colors.white,
-                )
-              ],
-            )),
+              child: LayoutBuilder(
+                builder: (ctx, constraint) {
+                  return Column(
+                    children: <Widget>[
+                      TabBar(
+                        tabs: [
+                          Container(
+                            //color: Colors.blue,
+                            margin: EdgeInsets.only(
+                                top: constraint.maxHeight * .27,
+                                bottom: constraint.maxHeight * .27),
+                            child: Text(
+                              'LIVE',
+                              style: TextStyle(
+                                fontSize: constraint.maxHeight * .32,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: constraint.maxHeight * .27,
+                                bottom: constraint.maxHeight * .27),
+                            child: Text(
+                              'RANDOM',
+                              style: TextStyle(
+                                fontSize: constraint.maxHeight * .32,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: constraint.maxHeight * .27,
+                                bottom: constraint.maxHeight * .27),
+                            child: Text(
+                              'NEW',
+                              style: TextStyle(
+                                fontSize: constraint.maxHeight * .32,
+                              ),
+                            ),
+                          ),
+                        ],
+                        //labelColor: Colors.white,
+
+                        indicatorColor: Colors.white,
+                      )
+                    ],
+                  );
+                },
+              ),
+            ),
           ),
-          preferredSize: Size.fromHeight(size.height * .08),
+          preferredSize: Size.fromHeight(size.height * .07),
         ),
         body: TabBarView(
           children: <Widget>[
@@ -212,8 +229,8 @@ class _VideoChatState extends State<VideoChat> {
                                 children: <Widget>[
                                   Container(
                                     decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                     height: constraint.maxHeight *
                                         .75, //size.height * .23,
                                     width: double.infinity,
