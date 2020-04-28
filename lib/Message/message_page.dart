@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
+import 'package:zuci/Call/call_utils.dart';
 import 'package:zuci/Firebase/Authentication.dart';
 import 'package:zuci/Firebase/Database.dart';
 import 'package:zuci/Firebase/user_model.dart';
@@ -8,8 +9,9 @@ import 'package:zuci/Message/message_model.dart';
 class Chat_page extends StatefulWidget {
 
   final User receiver;
+  final User sender;
 
-  Chat_page({this.receiver});
+  Chat_page({this.receiver,this.sender});
 
   @override
   _Chat_pageState createState() => _Chat_pageState();
@@ -59,10 +61,19 @@ class _Chat_pageState extends State<Chat_page> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: GestureDetector(
+                onTap: (){
+                  CallUtils.dial(
+                    from: sender,
+                    to: widget.receiver,
+                    context: context
+                  );
+                },
                   child: Icon(
                 Icons.video_call,
                 size: 30.0,
-              )),
+              ),
+
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -110,7 +121,7 @@ class _Chat_pageState extends State<Chat_page> {
   }
   Widget chatMessageItem(DocumentSnapshot snapshot) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 15),
+      margin: EdgeInsets.symmetric(vertical:3),
       child: Container(
         alignment: snapshot['senderId'] == sender.uid
             ? Alignment.centerRight
@@ -125,7 +136,7 @@ class _Chat_pageState extends State<Chat_page> {
     Radius messageRadius = Radius.circular(10);
 
     return Container(
-      margin: EdgeInsets.only(top: 12),
+      margin: EdgeInsets.only(top:1),
       constraints:
       BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
       decoration: BoxDecoration(
@@ -155,7 +166,7 @@ class _Chat_pageState extends State<Chat_page> {
     Radius messageRadius = Radius.circular(10);
 
     return Container(
-      margin: EdgeInsets.only(top: 12),
+      margin: EdgeInsets.only(top:1),
       constraints:
       BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
       decoration: BoxDecoration(
@@ -176,7 +187,7 @@ class _Chat_pageState extends State<Chat_page> {
 
     sendMessage() {
       var text = textFieldController.text;
-
+      textFieldController.clear();
       Message _message = Message(
         receiverId: widget.receiver.uid,
         senderId: sender.uid,
@@ -355,7 +366,9 @@ class _Chat_pageState extends State<Chat_page> {
                   Icons.send,
                   size: 15,
                 ),
-                onPressed: () => {sendMessage()},
+                onPressed: () => {
+                  sendMessage(),
+                },
               ))
               : Container()
         ],

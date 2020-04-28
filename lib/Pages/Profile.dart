@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zuci/Firebase/Authentication.dart';
+import 'package:zuci/Firebase/user_model.dart';
 import 'package:zuci/Pages/Coins.dart';
 import 'package:zuci/Pages/PhoneBind.dart';
 import 'package:zuci/Pages/Settings.dart';
@@ -15,7 +16,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
 
-
+  User user =User();
 
   Widget _showCircularProgress() {
     Size size = MediaQuery.of(context).size;
@@ -43,6 +44,17 @@ class _ProfileState extends State<Profile> {
   String name,gmail,id,coin,binded,followers,following,vip,phone_no;
   bool loading=true;
 
+  void getdetail() async{
+    auth _auth=auth();
+     user = await _auth.getUserDetails().whenComplete((){
+      setState(() {
+        print(user.id);
+        print(user.uid);
+      });
+
+    });
+
+  }
   void getuserdata() async
   {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
@@ -84,7 +96,7 @@ class _ProfileState extends State<Profile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Id:$id'),
+                    Text('Id:${user.id}'),
                     MaterialButton(
                       onPressed: () {},
                       height: 30,
@@ -102,7 +114,7 @@ class _ProfileState extends State<Profile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Id:$id"),
+                    Text("Id:${user.id}"),
                     MaterialButton(
                       onPressed: () {},
                       height: 30,

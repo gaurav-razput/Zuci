@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:zuci/Firebase/Authentication.dart';
 import 'package:zuci/Pages/check_auth_page.dart';
 import 'package:zuci/Pages/main_page.dart';
+import 'package:zuci/Provider/user_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,13 +29,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Zuci',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Zuci',
+        theme: ThemeData(
+          primarySwatch: Colors.purple,
+        ),
+        home: MyhomePage(),
+        debugShowCheckedModeBanner: false,
       ),
-      home: MyhomePage(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
