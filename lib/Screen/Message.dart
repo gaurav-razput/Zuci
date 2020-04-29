@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:zuci/Firebase/Authentication.dart';
-import 'package:zuci/Firebase/user_model.dart';
-import 'package:zuci/Message/message_page.dart';
+import 'package:zuci/Screen/chat_screen/chat_page.dart';
+import 'package:zuci/Screen/chat_screen/chatscreen.dart';
+import 'package:zuci/models/user.dart';
 
 class Messages extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class _MessagesState extends State<Messages> {
   User userinfo;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   cur_uid() async {
-  FirebaseUser user = await _firebaseAuth.currentUser().whenComplete(() {
+    FirebaseUser user = await _firebaseAuth.currentUser().whenComplete(() {
       setState(() {
         loading = false;
 
@@ -154,7 +154,7 @@ class _MessagesState extends State<Messages> {
                                 MaterialPageRoute(
                                   builder: (context) => Chat_page(
                                     receiver: rec,
-                                    sender: userinfo,
+                                    sen:user_uid,
                                   ),
                                 ),
                               );
@@ -178,12 +178,12 @@ class _MessagesState extends State<Messages> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: Column(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                                 children: <Widget>[
                                                   Text(
                                                     snapshot
@@ -192,7 +192,7 @@ class _MessagesState extends State<Messages> {
                                                         .data["name"],
                                                     style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.w600,
+                                                        FontWeight.w600,
                                                         fontSize: 16),
                                                   ),
                                                   Text(
@@ -212,7 +212,7 @@ class _MessagesState extends State<Messages> {
                                                       color: Colors.black45,
                                                       fontSize: 14.0,
                                                       fontWeight:
-                                                          FontWeight.w600),
+                                                      FontWeight.w600),
                                                 ),
                                               )
                                             ],
@@ -261,7 +261,7 @@ class _MessagesState extends State<Messages> {
                                   children: <Widget>[
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Text(
                                           "HelloWorld",
@@ -272,7 +272,7 @@ class _MessagesState extends State<Messages> {
                                         Text(
                                           "11:23 AM",
                                           style:
-                                              TextStyle(color: Colors.black45),
+                                          TextStyle(color: Colors.black45),
                                         ),
                                       ],
                                     ),

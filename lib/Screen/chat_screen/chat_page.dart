@@ -1,19 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
-import 'package:zuci/Call/call_utils.dart';
-import 'package:zuci/Call/video_call/pickup_layout.dart';
-import 'package:zuci/Firebase/Authentication.dart';
-import 'package:zuci/Firebase/Database.dart';
-import 'package:zuci/Firebase/user_model.dart';
-import 'package:zuci/Message/message_model.dart';
-import 'package:zuci/Permissions.dart';
+import 'package:zuci/callScreen/pickup/pickup_layout.dart';
+import 'package:zuci/models/message.dart';
+import 'package:zuci/models/user.dart';
+import 'package:zuci/resources/firebase_methods.dart';
+import 'package:zuci/utils/call_utilities.dart';
+import 'package:zuci/utils/permissions.dart';
 
 class Chat_page extends StatefulWidget {
 
   final User receiver;
-  final User sender;
+  final sen;
 
-  Chat_page({this.receiver,this.sender});
+  Chat_page({this.receiver,this.sen});
 
   @override
   _Chat_pageState createState() => _Chat_pageState();
@@ -37,56 +36,52 @@ class _Chat_pageState extends State<Chat_page> {
   bool isWriting = false;
   TextEditingController textFieldController = TextEditingController();
   User sender;
-  auth authb=auth();
+
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    authb.getCurrentUser().then((user){
-      setState(() {
-        sender =User(uid:user.uid,name: user.displayName,profilePhoto: user.photoUrl);
-      });
-    });
+    sender =User(uid:widget.sen);
 
   }
   @override
   Widget build(BuildContext context) {
     return PickupLayout(
       scaffold: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            title: Text(widget.receiver.name),
-            backgroundColor: Colors.purpleAccent,
-            elevation: 2.2,
-            actions: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child:   IconButton(
-                  icon: Icon(
-                    Icons.video_call,
-                  ),
-                  onPressed: () async =>
-                  await Permissions.cameraAndMicrophonePermissionsGranted()
-                      ? CallUtils.dial(
-                    from: sender,
-                    to: widget.receiver,
-                    context: context,
-                  )
-                      : {},
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(widget.receiver.name),
+          backgroundColor: Colors.purpleAccent,
+          elevation: 2.2,
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child:   IconButton(
+                icon: Icon(
+                  Icons.video_call,
                 ),
+                onPressed: () async =>
+                await Permissions.cameraAndMicrophonePermissionsGranted()
+                    ? CallUtils.dial(
+                  from: sender,
+                  to: widget.receiver,
+                  context: context,
+                )
+                    : {},
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GestureDetector(
-                    child: Icon(
-                  Icons.phone,
-                  size: 30.0,
-                )),
-              )
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: GestureDetector(
+                  child: Icon(
+                    Icons.phone,
+                    size: 30.0,
+                  )),
+            )
+          ],
+        ),
         body: Column(
           children: <Widget>[
             Flexible(
@@ -195,7 +190,7 @@ class _Chat_pageState extends State<Chat_page> {
         receiverId: widget.receiver.uid,
         senderId: sender.uid,
         message: text,
-        timestamp: FieldValue.serverTimestamp(),
+        timestamp: Timestamp.now(),
         type: 'text',
       );
 
@@ -203,7 +198,7 @@ class _Chat_pageState extends State<Chat_page> {
         isWriting = false;
       });
 
-      data_base_methods().addMessageToDb(_message, sender, widget.receiver);
+      FirebaseMethods().addMessageToDb(_message, sender, widget.receiver);
     }
 
 
@@ -330,10 +325,10 @@ class _Chat_pageState extends State<Chat_page> {
                   color: Colors.black,
                 ),
                 border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(50.0),
-                    ),
-                    borderSide: BorderSide(color: Colors.black),
+                  borderRadius: const BorderRadius.all(
+                    const Radius.circular(50.0),
+                  ),
+                  borderSide: BorderSide(color: Colors.black),
 
                 ),
 

@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:zuci/Call/call_model.dart';
+import 'package:zuci/constants/strings.dart';
+import 'package:zuci/models/call.dart';
 
 class CallMethods {
   final CollectionReference callCollection =
-  Firestore.instance.collection('call');
+      Firestore.instance.collection(CALL_COLLECTION);
 
   Stream<DocumentSnapshot> callStream({String uid}) =>
       callCollection.document(uid).snapshots();
@@ -24,6 +25,7 @@ class CallMethods {
       return false;
     }
   }
+
   Future<bool> endCall({Call call}) async {
     try {
       await callCollection.document(call.callerId).delete();

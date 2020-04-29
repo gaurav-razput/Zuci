@@ -90,7 +90,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                               children: <Widget>[
                                 Container(
                                   margin:
-                                      EdgeInsets.all(constraint.maxWidth * .02),
+                                  EdgeInsets.all(constraint.maxWidth * .02),
                                   child: Text(
                                     "Canada",
                                     style: TextStyle(
@@ -99,7 +99,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                 ),
                                 Container(
                                   margin:
-                                      EdgeInsets.all(constraint.maxWidth * .02),
+                                  EdgeInsets.all(constraint.maxWidth * .02),
                                   child: Text(
                                     "Zuci ID: 123455",
                                     style: TextStyle(
@@ -143,7 +143,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                     child: Text(
                       "Profile",
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Divider(),

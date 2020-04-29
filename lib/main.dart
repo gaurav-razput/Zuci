@@ -1,65 +1,51 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:zuci/Firebase/Authentication.dart';
-import 'package:zuci/Pages/check_auth_page.dart';
-import 'package:zuci/Pages/main_page.dart';
-import 'package:zuci/Provider/user_provider.dart';
+import 'package:zuci/Screen/HomePage.dart';
+import 'package:zuci/Screen/loginPage.dart';
+import 'package:zuci/provider/user_provider.dart';
+import 'package:zuci/resources/firebase_methods.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
+FirebaseMethods _firebaseMethods =FirebaseMethods();
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  _MyAppState createState() => _MyAppState();
+  Widget build(BuildContext context) {
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: MyHomePage(),
+      ),
+    );
+  }
+}
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    super.initState();
-  }
-
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Zuci',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-      ),
-      home: MyhomePage(),
-      debugShowCheckedModeBanner: false,
+    return FutureBuilder(
+      future: _firebaseMethods.getCurrentUser(),
+      builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+        if (snapshot.hasData) {
+          return HomePage();
+        } else {
+          return LoginPAge();
+        }
+      },
     );
   }
 }
 
-class MyhomePage extends StatefulWidget {
-  MyhomePage({Key key, this.auth, this.userId, this.logoutCallback})
-      : super(key: key);
-
-  final firebase_methods auth;
-  final VoidCallback logoutCallback;
-  final String userId;
-  @override
-  _MyhomePageState createState() => _MyhomePageState();
-}
-
-class _MyhomePageState extends State<MyhomePage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: _auth.currentUser().asStream(),
-        builder: (context, snapshot) {
-          return snapshot.hasData ? MainPage() : Check_Status(auth: new auth());
-        });
-  }
-}

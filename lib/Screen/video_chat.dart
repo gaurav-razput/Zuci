@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zuci/Firebase/Authentication.dart';
-import 'package:zuci/Pages/NxtVideoChat.dart';
-import 'package:zuci/Pages/check_auth_page.dart';
+import 'package:zuci/Screen/video_chat2.dart';
 
 class VideoChat extends StatefulWidget {
   @override
@@ -247,7 +245,7 @@ class _VideoChatState extends State<VideoChat> {
                                         constraint.maxHeight * .025),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         Container(
                                           //color: Colors.red,
@@ -278,7 +276,7 @@ class _VideoChatState extends State<VideoChat> {
                                   Container(
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         Text(
                                           "🇮🇳  India",
@@ -353,10 +351,10 @@ class _VideoChatState extends State<VideoChat> {
                             ),
                             Container(
                               margin:
-                                  EdgeInsets.all(constraint.maxHeight * .025),
+                              EdgeInsets.all(constraint.maxHeight * .025),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   Container(
                                     //color: Colors.red,
@@ -387,7 +385,7 @@ class _VideoChatState extends State<VideoChat> {
                             Container(
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   Text(
                                     "🇮🇳  India",
@@ -458,10 +456,10 @@ class _VideoChatState extends State<VideoChat> {
                             ),
                             Container(
                               margin:
-                                  EdgeInsets.all(constraint.maxHeight * .025),
+                              EdgeInsets.all(constraint.maxHeight * .025),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   Container(
                                     //color: Colors.red,
@@ -492,7 +490,7 @@ class _VideoChatState extends State<VideoChat> {
                             Container(
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   Text(
                                     "🇮🇳  India",
@@ -517,4 +515,5 @@ class _VideoChatState extends State<VideoChat> {
       ),
     );
   }
+
 }

@@ -1,15 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:zuci/Firebase/Authentication.dart';
-import 'package:zuci/Firebase/user_model.dart';
+import 'package:zuci/models/user.dart';
+import 'package:zuci/resources/firebase_methods.dart';
 
 class UserProvider with ChangeNotifier {
-  User _user;
-  auth _auth=auth();
-  User get getUser => _user;
+   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FirebaseMethods _firebaseMethods =FirebaseMethods();
+  String _user;
+
+  String get getUser => _user;
 
   void refreshUser() async {
-    User user = await _auth.getUserDetails();
-    _user = user;
+    FirebaseUser user=await _firebaseAuth.currentUser();
+    _user=user.uid;
     notifyListeners();
   }
 

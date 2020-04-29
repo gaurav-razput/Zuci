@@ -3,15 +3,18 @@ import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:zuci/Call/call_method.dart';
-import 'package:zuci/Call/call_model.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
+import 'package:zuci/callScreen/configs/agora_configs.dart';
+import 'package:zuci/models/call.dart';
+import 'package:zuci/provider/user_provider.dart';
+import 'package:zuci/resources/call_methods.dart';
 
 class CallScreen extends StatefulWidget {
   final Call call;
-  final String user_uid;
 
   CallScreen({
-    @required this.call, this.user_uid,
+    @required this.call,
   });
 
   @override
@@ -21,8 +24,7 @@ class CallScreen extends StatefulWidget {
 class _CallScreenState extends State<CallScreen> {
   final CallMethods callMethods = CallMethods();
 
-  String APP_ID="660450d4ba0c450e9989d4d148ec49aa";
-
+  UserProvider userProvider;
   StreamSubscription callStreamSubscription;
 
   static final _users = <int>[];
@@ -57,10 +59,11 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   addPostFrameCallback() {
-
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      userProvider = Provider.of<UserProvider>(context, listen: false);
 
       callStreamSubscription = callMethods
-          .callStream(uid: widget.user_uid)
+          .callStream(uid: userProvider.getUser)
           .listen((DocumentSnapshot ds) {
         // defining the logic
         switch (ds.data) {
@@ -73,6 +76,7 @@ class _CallScreenState extends State<CallScreen> {
             break;
         }
       });
+    });
   }
 
   /// Create agora sdk instance and initialize
@@ -368,7 +372,7 @@ class _CallScreenState extends State<CallScreen> {
         child: Stack(
           children: <Widget>[
             _viewRows(),
-             _panel(),
+            // _panel(),
             _toolbar(),
           ],
         ),
