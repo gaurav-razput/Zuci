@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:provider/provider.dart';
 import 'package:zuci/Call/video_call/pickup_layout.dart';
 import 'package:zuci/Pages/FavouriteList.dart';
 import 'package:zuci/Pages/Messages.dart';
 import 'package:zuci/Pages/Profile.dart';
 import 'package:zuci/Pages/VideoChat.dart';
-import 'package:zuci/Provider/user_provider.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -21,18 +18,6 @@ class _MainPageState extends State<MainPage> {
     FavouriteList(),
     Profile(),
   ];
-  UserProvider userProvider;
-  @override
-//  void initState() {
-//    // TODO: implement initState
-//    super.initState();
-//    SchedulerBinding.instance.addPostFrameCallback((_){
-//      userProvider = Provider.of<UserProvider>(context, listen: false);
-//      userProvider.refreshUser();
-//    });
-//
-//  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

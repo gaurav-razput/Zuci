@@ -33,11 +33,6 @@ class PickupScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 50),
-//            CachedImage(
-//              call.callerPic,
-//              isRound: true,
-//              radius: 180,
-//            ),
             SizedBox(height: 15),
             Text(
               call.callerName,
@@ -66,7 +61,7 @@ class PickupScreen extends StatelessWidget {
                       ? Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CallScreen(call: call),
+                      builder: (context) => CallScreen(call: call,user_uid: user_uid,),
                     ),
                   )
                       : {},

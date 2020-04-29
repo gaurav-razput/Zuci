@@ -8,7 +8,7 @@ import 'package:zuci/Call/call_model.dart';
 
 class CallScreen extends StatefulWidget {
   final Call call;
-  final user_uid;
+  final String user_uid;
 
   CallScreen({
     @required this.call, this.user_uid,
@@ -20,6 +20,7 @@ class CallScreen extends StatefulWidget {
 
 class _CallScreenState extends State<CallScreen> {
   final CallMethods callMethods = CallMethods();
+
   String APP_ID="660450d4ba0c450e9989d4d148ec49aa";
 
   StreamSubscription callStreamSubscription;

@@ -19,7 +19,7 @@ class CallUtils {
       receiverId: to.uid,
       receiverName: to.name,
       receiverPic: to.profilePhoto,
-      channelId: generate('abcdefgh1234567890', 8),
+      channelId: generate('1234567890', 8),
     );
 
     bool callMade = await callMethods.makeCall(call: call);

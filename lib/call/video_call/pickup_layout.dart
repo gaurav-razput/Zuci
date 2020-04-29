@@ -29,7 +29,9 @@ class _PickupLayoutState extends State<PickupLayout> {
   }
   @override
   void initState() {
+    // TODO: implement initState
     getuser();
+//    print(user.uid);
   }
 
   @override

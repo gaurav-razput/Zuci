@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
 import 'package:zuci/Call/call_utils.dart';
+import 'package:zuci/Call/video_call/pickup_layout.dart';
 import 'package:zuci/Firebase/Authentication.dart';
 import 'package:zuci/Firebase/Database.dart';
 import 'package:zuci/Firebase/user_model.dart';
@@ -52,46 +53,48 @@ class _Chat_pageState extends State<Chat_page> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(widget.receiver.name),
-          backgroundColor: Colors.purpleAccent,
-          elevation: 2.2,
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child:   IconButton(
-                icon: Icon(
-                  Icons.video_call,
+    return PickupLayout(
+      scaffold: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text(widget.receiver.name),
+            backgroundColor: Colors.purpleAccent,
+            elevation: 2.2,
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child:   IconButton(
+                  icon: Icon(
+                    Icons.video_call,
+                  ),
+                  onPressed: () async =>
+                  await Permissions.cameraAndMicrophonePermissionsGranted()
+                      ? CallUtils.dial(
+                    from: sender,
+                    to: widget.receiver,
+                    context: context,
+                  )
+                      : {},
                 ),
-                onPressed: () async =>
-                await Permissions.cameraAndMicrophonePermissionsGranted()
-                    ? CallUtils.dial(
-                  from: sender,
-                  to: widget.receiver,
-                  context: context,
-                )
-                    : {},
               ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: GestureDetector(
+                    child: Icon(
+                  Icons.phone,
+                  size: 30.0,
+                )),
+              )
+            ],
+          ),
+        body: Column(
+          children: <Widget>[
+            Flexible(
+              child: messageList(),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: GestureDetector(
-                  child: Icon(
-                Icons.phone,
-                size: 30.0,
-              )),
-            )
+            chatControls(),
           ],
         ),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: messageList(),
-          ),
-          chatControls(),
-        ],
       ),
     );
   }

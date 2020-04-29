@@ -13,15 +13,18 @@ class Messages extends StatefulWidget {
 class _MessagesState extends State<Messages> {
   bool loading;
   String user_uid;
+  User userinfo;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   cur_uid() async {
-    FirebaseUser user = await _firebaseAuth.currentUser().whenComplete(() {
+  FirebaseUser user = await _firebaseAuth.currentUser().whenComplete(() {
       setState(() {
         loading = false;
+
       });
     });
 
     user_uid = user.uid;
+    userinfo=User(uid: user.uid);
   }
 
   @override
@@ -151,6 +154,7 @@ class _MessagesState extends State<Messages> {
                                 MaterialPageRoute(
                                   builder: (context) => Chat_page(
                                     receiver: rec,
+                                    sender: userinfo,
                                   ),
                                 ),
                               );
