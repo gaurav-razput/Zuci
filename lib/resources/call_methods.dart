@@ -9,6 +9,13 @@ class CallMethods {
   Stream<DocumentSnapshot> callStream({String uid}) =>
       callCollection.document(uid).snapshots();
 
+
+  final CollectionReference voicecallCollection =
+  Firestore.instance.collection(VOICE_CALL_COLLECTION);
+
+  Stream<DocumentSnapshot> voicecallStream({String uid}) =>
+      callCollection.document(uid).snapshots();
+
   Future<bool> makeCall({Call call}) async {
     try {
       call.hasDialled = true;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zuci/Screen/HomePage.dart';
+import 'package:zuci/Screen/Registration.dart';
 import 'package:zuci/resources/firebase_methods.dart';
 
 
@@ -320,12 +321,12 @@ class _LoginPAgeState extends State<LoginPAge> {
                                 style: TextStyle(color: Color(0xFFB44EB1),),
                               ),
                             ),
-//                            onTap: () {
-//                              Navigator.push(
-//                                  context,
-//                                  MaterialPageRoute(
-//                                      builder: (context) => Registration()));
-//                            },
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Registration()));
+                            },
                           )
                         ],
                       )

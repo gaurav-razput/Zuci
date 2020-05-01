@@ -74,11 +74,19 @@ class _Chat_pageState extends State<Chat_page> {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: GestureDetector(
-                  child: Icon(
-                    Icons.phone,
-                    size: 30.0,
-                  )),
+              child:  IconButton(
+                icon: Icon(
+                  Icons.phone,
+                ),
+                onPressed: () async =>
+                await Permissions.cameraAndMicrophonePermissionsGranted()
+                    ? CallUtils.voice_dail(
+                  from: sender,
+                  to: widget.receiver,
+                  context: context,
+                )
+                    : {},
+              ),
             )
           ],
         ),

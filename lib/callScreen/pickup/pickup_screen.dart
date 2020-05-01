@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zuci/Screen/callScreen.dart';
+import 'package:zuci/callScreen/pickup/audio_call.dart';
 import 'package:zuci/models/call.dart';
 import 'package:zuci/resources/call_methods.dart';
 import 'package:zuci/utils/permissions.dart';
@@ -58,7 +59,12 @@ class PickupScreen extends StatelessWidget {
                   color: Colors.green,
                   onPressed: () async =>
                       await Permissions.cameraAndMicrophonePermissionsGranted()
-                          ? Navigator.push(
+                          ? call.isvoicecall?Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => audio_call_screen(call: call),
+                        ),
+                      ):Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => CallScreen(call: call),
