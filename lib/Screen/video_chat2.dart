@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zuci/Screen/chat_screen/chat_page.dart';
+import 'package:zuci/models/user.dart';
+import 'package:zuci/provider/user_provider.dart';
+import 'package:zuci/utils/call_utilities.dart';
+import 'package:zuci/utils/permissions.dart';
 
 class NxtVideoChat extends StatefulWidget {
+  final User receiver;
+  NxtVideoChat({this.receiver});
+
   @override
   _NxtVideoChatState createState() => _NxtVideoChatState();
 }
 
 class _NxtVideoChatState extends State<NxtVideoChat> {
+
+  User user;
+
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    user=User(uid: userProvider.getUser);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
@@ -71,7 +85,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                 Container(
                                   width: constraint.maxWidth * .5,
                                   child: Text(
-                                    "Katty Perry",
+                                    "${widget.receiver.name}",
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                     overflow: TextOverflow.ellipsis,
@@ -90,7 +104,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                               children: <Widget>[
                                 Container(
                                   margin:
-                                  EdgeInsets.all(constraint.maxWidth * .02),
+                                      EdgeInsets.all(constraint.maxWidth * .02),
                                   child: Text(
                                     "Canada",
                                     style: TextStyle(
@@ -99,7 +113,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                 ),
                                 Container(
                                   margin:
-                                  EdgeInsets.all(constraint.maxWidth * .02),
+                                      EdgeInsets.all(constraint.maxWidth * .02),
                                   child: Text(
                                     "Zuci ID: 123455",
                                     style: TextStyle(
@@ -123,9 +137,131 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  buttons(Icons.add_circle, "Follow"),
-                  buttons(Icons.call, "Voice Call"),
-                  buttons(Icons.message, "Say Hi"),
+//                  buttons(Icons.add_circle, "Follow", null),
+                  LayoutBuilder(
+                    builder: (ctx, constraint) {
+                      return GestureDetector(
+//                        onTap: () {
+//                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Chat_page(receiver: widget.receiver,sen: user.uid,)));
+//                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.add),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Text(
+                                    'Subscribe',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            border: Border.all(
+                              color: Colors.white10,
+                            ),
+                            // color: Colors.black26,
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: [0.2, 1],
+                              colors: [Color(0xFFB44EB1), Color(0xFFDA4D91)],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                LayoutBuilder(
+                  builder: (ctx, constraint) {
+                    return GestureDetector(
+                      onTap: () async =>
+                      await Permissions.cameraAndMicrophonePermissionsGranted()
+                          ? CallUtils.voice_dail(
+                        from: user,
+                        to: widget.receiver,
+                        context: context,
+                      )
+                          : {},
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                             Icon(Icons.phone),
+                              Padding(
+                                padding: EdgeInsets.only(left: 5),
+                                child: Text('Voice Call',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          border: Border.all(
+                            color: Colors.white10,
+                          ),
+                          // color: Colors.black26,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: [0.2, 1],
+                            colors: [Color(0xFFB44EB1), Color(0xFFDA4D91)],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              LayoutBuilder(
+                builder: (ctx, constraint) {
+                  return GestureDetector(
+                    onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Chat_page(receiver: widget.receiver,sen: user.uid,)));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.message),
+                            Padding(
+                              padding: EdgeInsets.only(left: 5),
+                              child: Text(
+                                'Say Hi',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        border: Border.all(
+                          color: Colors.white10,
+                        ),
+                        // color: Colors.black26,
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0.2, 1],
+                          colors: [Color(0xFFB44EB1), Color(0xFFDA4D91)],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              )
                 ],
               ),
             ),
@@ -143,7 +279,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                     child: Text(
                       "Profile",
                       style:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Divider(),
@@ -156,9 +292,15 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                   items("Grand Total", "994 minutes(s)"),
                   //Video Call Button
                   InkWell(
-                    onTap: () {
-                      print("Vidio calling");
-                    },
+
+                    onTap: () async =>
+                    await Permissions.cameraAndMicrophonePermissionsGranted()
+                        ? CallUtils.dial(
+                      from: user,
+                      to: widget.receiver,
+                      context: context,
+                    )
+                        : {},
                     child: Container(
                       margin: EdgeInsets.only(top: size.height * .025),
                       height: size.height * .07,
@@ -204,46 +346,54 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
   }
 
 //Button widget
-  Widget buttons(img, txt) {
-    return LayoutBuilder(
-      builder: (ctx, constraint) {
-        return Container(
-          padding: EdgeInsets.all(8),
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  img,
-                  color: Colors.white,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 5),
-                  child: Text(
-                    txt,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            border: Border.all(
-              color: Colors.white10,
-            ),
-            // color: Colors.black26,
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.2, 1],
-              colors: [Color(0xFFB44EB1), Color(0xFFDA4D91)],
-            ),
-          ),
-        );
-      },
-    );
-  }
+//  Widget buttons(img, txt, Function() onpressed) {
+//    return LayoutBuilder(
+//      builder: (ctx, constraint) {
+//        return Container(
+//          padding: EdgeInsets.all(8),
+//          child: Center(
+//            child: Row(
+//              mainAxisAlignment: MainAxisAlignment.center,
+//              children: <Widget>[
+//                IconButton(
+//                  icon: img,
+//                  onPressed: () async =>
+//                      await Permissions.cameraAndMicrophonePermissionsGranted()
+//                          ? CallUtils.dial(
+//                              from: user,
+//                              to: widget.receiver,
+//                              context: context,
+//                            )
+//                          : {},
+//                  color: Colors.white,
+//                ),
+//                Padding(
+//                  padding: EdgeInsets.only(left: 5),
+//                  child: Text(
+//                    txt,
+//                    style: TextStyle(color: Colors.white),
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
+//          decoration: BoxDecoration(
+//            borderRadius: BorderRadius.circular(20.0),
+//            border: Border.all(
+//              color: Colors.white10,
+//            ),
+//            // color: Colors.black26,
+//            gradient: LinearGradient(
+//              begin: Alignment.topCenter,
+//              end: Alignment.bottomCenter,
+//              stops: [0.2, 1],
+//              colors: [Color(0xFFB44EB1), Color(0xFFDA4D91)],
+//            ),
+//          ),
+//        );
+//      },
+//    );
+//  }
 
   //profile and details widgets
   Widget items(ques, ans) {

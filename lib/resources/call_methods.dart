@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:zuci/constants/strings.dart';
 import 'package:zuci/models/call.dart';
+import 'package:zuci/models/contact.dart';
 
 class CallMethods {
   final CollectionReference callCollection =
       Firestore.instance.collection(CALL_COLLECTION);
+
 
   Stream<DocumentSnapshot> callStream({String uid}) =>
       callCollection.document(uid).snapshots();
@@ -43,4 +46,5 @@ class CallMethods {
       return false;
     }
   }
+
 }
