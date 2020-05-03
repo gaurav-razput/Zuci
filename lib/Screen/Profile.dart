@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:zuci/Screen/Coins.dart';
+import 'package:zuci/Screen/PhoneBind.dart';
+import 'package:zuci/Screen/Settings.dart';
+import 'package:zuci/Screen/Shair.dart';
+import 'package:zuci/Screen/Vip.dart';
 import 'package:zuci/Screen/loginPage.dart';
 
 
@@ -37,13 +42,12 @@ class _ProfileState extends State<Profile> {
   }
 
 
-  String name,gmail,id,coin,binded,followers,following,vip,phone_no;
+  String name,gmail,id,coin,binded,followers,following,vip,phone_no,uid;
   bool loading=true;
 
   void getuserdata() async
   {
     user = await FirebaseAuth.instance.currentUser();
-    print(user.uid);
     var document = await Firestore.instance.collection('USER').document(user.uid);
     document.get().then((document){
       name = document['name'];
@@ -65,7 +69,10 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    getuserdata();
+    setState(() {
+      getuserdata();
+    });
+
 
   }
   _neverSatisfied() {
@@ -81,7 +88,7 @@ class _ProfileState extends State<Profile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Id:${user.uid}'),
+                    Text('Id:${id}'),
                     MaterialButton(
                       onPressed: () {},
                       height: 30,
@@ -99,7 +106,7 @@ class _ProfileState extends State<Profile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Id:${user.uid}"),
+                    Text("Id:${id}"),
                     MaterialButton(
                       onPressed: () {},
                       height: 30,
@@ -139,7 +146,7 @@ class _ProfileState extends State<Profile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-//                  builder: (context) => Vip(),
+                  builder: (context) => Vip(),
                 ),
               );
               break;
@@ -149,7 +156,7 @@ class _ProfileState extends State<Profile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-//                  builder: (context) => Coins(),
+                  builder: (context) => Coins(coins: coin,uid:user.uid,),
                 ),
               );
               break;
@@ -164,7 +171,7 @@ class _ProfileState extends State<Profile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-//                  builder: (context) => PhoneBind(),
+                  builder: (context) => PhoneBind(),
                 ),
               );
               break;
@@ -174,7 +181,7 @@ class _ProfileState extends State<Profile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-//                  builder: (context) => Shair(),
+                  builder: (context) => Shair(),
                 ),
               );
               break;
@@ -184,7 +191,7 @@ class _ProfileState extends State<Profile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-//                  builder: (context) => Settings(),
+                  builder: (context) => Settings(),
                 ),
               );
               break;
@@ -224,7 +231,7 @@ class _ProfileState extends State<Profile> {
                     Container(child: Text("$following Following"))
                   ],
                 ),
-                options(Icons.attach_money, "VIP", 1),
+//                options(Icons.attach_money, "VIP", 1),
                 options(Icons.attach_money, "Get Coins", 2),
                 options(Icons.person, "Acount Info", 3),
                 options(Icons.phone_iphone, "Phone Bonding", 4),

@@ -43,19 +43,6 @@ class FirebaseMethods {
     return User.fromMap(documentSnapshot.data);
   }
 
-//  Future<FirebaseUser> signIn() async {
-//    GoogleSignInAccount _signInAccount = await _googleSignIn.signIn();
-//    GoogleSignInAuthentication _signInAuthentication =
-//        await _signInAccount.authentication;
-//
-//    final AuthCredential credential = GoogleAuthProvider.getCredential(
-//        accessToken: _signInAuthentication.accessToken,
-//        idToken: _signInAuthentication.idToken);
-//
-//    FirebaseUser user = await _auth.signInWithCredential(credential);
-//    return user;
-//  }
-
   Future<bool> authenticateUser(FirebaseUser user) async {
     QuerySnapshot result = await firestore
         .collection(USERS_COLLECTION)
@@ -108,23 +95,6 @@ class FirebaseMethods {
     return userList;
   }
 
-//  Future<void> addMessageToDb(
-//      Message message, User sender, User receiver) async {
-//    var map = message.toMap();
-//
-//    await firestore
-//        .collection(MESSAGES_COLLECTION)
-//        .document(message.senderId)
-//        .collection(message.receiverId)
-//        .add(map);
-//
-//    return await firestore
-//        .collection(MESSAGES_COLLECTION)
-//        .document(message.receiverId)
-//        .collection(message.senderId)
-//        .add(map);
-//  }
-
   Future<void> addMessageToDb(
       Message message, User sender, User receiver) async {
     var map = message.toMap();
@@ -154,19 +124,12 @@ class FirebaseMethods {
       .collection(CONTACTS_COLLECTION)
       .snapshots();
 
-
   DocumentReference getContactsDocument({String of, String forContact}) =>
       _userCollection
           .document(of)
           .collection(CONTACTS_COLLECTION)
           .document(forContact);
 
-//  addToContacts({String senderId, String receiverId}) async {
-//    Timestamp currentTime = Timestamp.now();
-//
-//    await addToSenderContacts(senderId, receiverId, currentTime);
-//    await addToReceiverContacts(senderId, receiverId, currentTime);
-//  }
   Future<void> addToSenderContacts(
       String senderId,
       String receiverId,
@@ -275,6 +238,26 @@ class FirebaseMethods {
         .document(message.receiverId)
         .collection(message.senderId)
         .add(map);
+  }
+
+  Future<void> addCoin(uid,addcoins) async{
+    print('Add coin is called');
+    print(uid);
+    String coin;
+    var document = await Firestore.instance.collection('USER').document(uid);
+    document.get().then((document){
+      coin=document['Coins'];
+      print('Previous coin is $coin');
+    }).whenComplete((){
+      Firestore.instance
+          .collection('USER')
+          .document('$uid')
+          .updateData({
+        'Coins': '${int.parse(coin)+addcoins}',
+      });
+      print('coins after update ${int.parse(coin)+addcoins}');
+    });
+
   }
 
 //  void uploadImage(File image, String receiverId, String senderId,
