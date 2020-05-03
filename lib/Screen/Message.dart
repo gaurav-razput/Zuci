@@ -3,15 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zuci/Screen/chat_screen/chat_page.dart';
-import 'package:zuci/Screen/chat_screen/chatscreen.dart';
 import 'package:zuci/models/contact.dart';
 import 'package:zuci/models/message.dart';
 import 'package:zuci/models/user.dart';
 import 'package:zuci/provider/user_provider.dart';
-import 'package:zuci/resources/call_methods.dart';
 import 'package:zuci/resources/firebase_methods.dart';
 import 'package:zuci/utils/universal_variables.dart';
-import 'package:zuci/widgets/custom_tile.dart';
 
 class Messages extends StatefulWidget {
   @override
@@ -68,6 +65,14 @@ class _MessagesState extends State<Messages> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Text('Live'),
+          backgroundColor: Colors.pinkAccent,
+          onPressed: (){
+
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: PreferredSize(
           child: Container(
             decoration: BoxDecoration(

@@ -123,6 +123,10 @@ class FirebaseMethods {
       .document(userId)
       .collection(CONTACTS_COLLECTION)
       .snapshots();
+  Stream<QuerySnapshot> fetchSubscribe({String userId}) => _userCollection
+      .document(userId)
+      .collection(SUBSCRIPTION_COLLECTION)
+      .snapshots();
 
   DocumentReference getContactsDocument({String of, String forContact}) =>
       _userCollection
@@ -258,6 +262,27 @@ class FirebaseMethods {
       print('coins after update ${int.parse(coin)+addcoins}');
     });
 
+  }
+
+  Future<void> addsubscription(of,to){
+    print('Add subscription method is called ');
+    Map<String, String> info = <String, String>{
+      'of':of,
+      'to':to
+    };
+    _userCollection
+        .document(of)
+        .collection(SUBSCRIPTION_COLLECTION)
+        .document(to).setData(info);
+  }
+
+  Future<bool> issubscribe(of,to) async {
+    var document = await Firestore.instance.collection('USER').document(of).collection(SUBSCRIPTION_COLLECTION).document(to).get();
+    print('is subscribe${document.exists}');
+    if(document.exists){
+      return true;
+    }
+    return false;
   }
 
 //  void uploadImage(File image, String receiverId, String senderId,

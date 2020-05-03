@@ -72,8 +72,6 @@ class _ProfileState extends State<Profile> {
     setState(() {
       getuserdata();
     });
-
-
   }
   _neverSatisfied() {
     return showDialog(

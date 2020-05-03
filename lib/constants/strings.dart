@@ -3,6 +3,8 @@ const String USERS_COLLECTION = "USER";
 const String CALL_COLLECTION = "call";
 const String VOICE_CALL_COLLECTION = "call";
 const String CONTACTS_COLLECTION = "contacts";
+const String SUBSCRIPTION_COLLECTION = "subscription";
+
 
 
 const String TIMESTAMP_FIELD = "timestamp";

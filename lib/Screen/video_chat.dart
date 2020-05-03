@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zuci/Screen/video_chat2.dart';
 import 'package:zuci/models/user.dart';
+import 'package:zuci/provider/user_provider.dart';
 
 class VideoChat extends StatefulWidget {
   @override
@@ -9,8 +11,11 @@ class VideoChat extends StatefulWidget {
 }
 
 class _VideoChatState extends State<VideoChat> {
+
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+
     Size size = MediaQuery.of(context).size;
     final double itemHeight = size.height * .1;
     final double itemWidth = size.width * .31;
@@ -237,6 +242,7 @@ class _VideoChatState extends State<VideoChat> {
                                   User rec = User(
                                     name: snapshot.data.documents[index].data["name"],
                                     uid: snapshot.data.documents[index].data["uid"],
+                                      id:snapshot.data.documents[index].data['Id'],
 
                                   );
                                   return GestureDetector(
@@ -244,7 +250,7 @@ class _VideoChatState extends State<VideoChat> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => NxtVideoChat(receiver:rec),
+                                          builder: (context) => NxtVideoChat(receiver:rec,user:userProvider.getUser),
                                         ),
                                       );
                                     },
