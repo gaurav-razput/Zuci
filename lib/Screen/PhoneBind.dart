@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zuci/resources/phone_verification.dart';
 
 class PhoneBind extends StatefulWidget {
   @override
@@ -42,7 +43,9 @@ class _PhoneBindState extends State<PhoneBind> {
               ),
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Otp(email: null)));
+              },
               child: Container(
                 height: size.height * .07,
                 child: Center(
@@ -68,7 +71,6 @@ class _PhoneBindState extends State<PhoneBind> {
                   border: Border.all(
                     color: Colors.white10,
                   ),
-                  // color: Colors.black26,
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,

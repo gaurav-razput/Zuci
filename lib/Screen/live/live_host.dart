@@ -1,36 +1,31 @@
-import 'dart:async';
-
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'dart:async';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:provider/provider.dart';
+import 'package:zuci/Screen/live/live_method.dart';
 import 'package:zuci/callScreen/configs/agora_configs.dart';
-import 'package:zuci/models/call.dart';
 import 'package:zuci/provider/user_provider.dart';
-import 'package:zuci/resources/call_methods.dart';
+import 'package:zuci/resources/firebase_methods.dart';
 
-class CallScreen extends StatefulWidget {
-  final Call call;
-
-  CallScreen({
-    @required this.call,
-  });
-
+class Host extends StatefulWidget {
+  final token;
+  final uid;
+  Host({this.token, this.uid});
   @override
-  _CallScreenState createState() => _CallScreenState();
+  _HostState createState() => _HostState();
 }
 
-class _CallScreenState extends State<CallScreen> {
-  final CallMethods callMethods = CallMethods();
-
-  UserProvider userProvider;
-  StreamSubscription callStreamSubscription;
-
+class _HostState extends State<Host> {
+  LiveMethod liveMethod = LiveMethod();
   static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
 
+  UserProvider userProvider;
+  StreamSubscription liveStreamSubscription;
   @override
   void initState() {
     super.initState();
@@ -54,7 +49,7 @@ class _CallScreenState extends State<CallScreen> {
     await AgoraRtcEngine.enableWebSdkInteroperability(true);
     await AgoraRtcEngine.setParameters(
         '''{\"che.video.lowBitRateStreamParameter\":{\"width\":320,\"height\":180,\"frameRate\":15,\"bitRate\":140}}''');
-    await AgoraRtcEngine.joinChannel(null, widget.call.channelId, null, 0);
+    await AgoraRtcEngine.joinChannel(null, widget.token, null, 0);
 
   }
 
@@ -62,7 +57,7 @@ class _CallScreenState extends State<CallScreen> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       userProvider = Provider.of<UserProvider>(context, listen: false);
 
-      callStreamSubscription = callMethods
+      liveStreamSubscription = liveMethod
           .callStream(uid: userProvider.getUser)
           .listen((DocumentSnapshot ds) {
         // defining the logic
@@ -128,7 +123,7 @@ class _CallScreenState extends State<CallScreen> {
     };
 
     AgoraRtcEngine.onUserOffline = (int a, int b) {
-      callMethods.endCall(call: widget.call);
+      liveMethod.endlive(widget.uid);
       setState(() {
         final info = 'onUserOffline: a: ${a.toString()}, b: ${b.toString()}';
         _infoStrings.add(info);
@@ -274,9 +269,7 @@ class _CallScreenState extends State<CallScreen> {
             padding: const EdgeInsets.all(12.0),
           ),
           RawMaterialButton(
-            onPressed: () => callMethods.endCall(
-              call: widget.call,
-            ),
+            onPressed: () => liveMethod.endlive(widget.uid),
             child: Icon(
               Icons.call_end,
               color: Colors.white,
@@ -311,7 +304,7 @@ class _CallScreenState extends State<CallScreen> {
     // destroy sdk
     AgoraRtcEngine.leaveChannel();
     AgoraRtcEngine.destroy();
-    callStreamSubscription.cancel();
+    liveStreamSubscription.cancel();
     super.dispose();
   }
 

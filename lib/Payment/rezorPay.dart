@@ -96,7 +96,7 @@ class _paymentState extends State<payment> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text("Y0u Get ${widget.amount} Coins"),
+                Text("You Get ${widget.amount} Coins"),
                 SizedBox(height: 7.0,),
                 Text("Total Payable Amount ${int.parse(widget.amount)/10} "),
                 SizedBox(height: 50.0,),

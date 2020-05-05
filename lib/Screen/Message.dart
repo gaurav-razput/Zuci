@@ -3,11 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zuci/Screen/chat_screen/chat_page.dart';
+import 'package:zuci/Screen/live/live_host.dart';
+import 'package:zuci/Screen/live/live_method.dart';
 import 'package:zuci/models/contact.dart';
 import 'package:zuci/models/message.dart';
 import 'package:zuci/models/user.dart';
 import 'package:zuci/provider/user_provider.dart';
 import 'package:zuci/resources/firebase_methods.dart';
+import 'package:zuci/utils/permissions.dart';
 import 'package:zuci/utils/universal_variables.dart';
 
 class Messages extends StatefulWidget {
@@ -19,19 +22,24 @@ class _MessagesState extends State<Messages> {
   bool loading;
   String user_uid;
   User userinfo;
+  LiveMethod liveMethod =LiveMethod();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   cur_uid() async {
     FirebaseUser user = await _firebaseAuth.currentUser().whenComplete(() {
       setState(() {
         loading = false;
-
       });
     });
 
     user_uid = user.uid;
     userinfo=User(uid: user.uid);
   }
-
+  String token;
+  Future<void> golive_methodcall() async {
+    token=await liveMethod.GoLiveMethod(user_uid, 'name').whenComplete((){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>Host(token:token,uid: user_uid,)));
+    });
+  }
   @override
   void initState() {
     super.initState();
@@ -68,9 +76,9 @@ class _MessagesState extends State<Messages> {
         floatingActionButton: FloatingActionButton(
           child: Text('Live'),
           backgroundColor: Colors.pinkAccent,
-          onPressed: (){
-
-          },
+          onPressed: () async =>await Permissions.cameraAndMicrophonePermissionsGranted()?
+            golive_methodcall()
+          :{},
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: PreferredSize(

@@ -7,8 +7,6 @@ import 'package:zuci/models/contact.dart';
 class CallMethods {
   final CollectionReference callCollection =
       Firestore.instance.collection(CALL_COLLECTION);
-
-
   Stream<DocumentSnapshot> callStream({String uid}) =>
       callCollection.document(uid).snapshots();
 

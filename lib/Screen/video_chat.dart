@@ -48,7 +48,7 @@ class _VideoChatState extends State<VideoChat> {
                                 top: constraint.maxHeight * .27,
                                 bottom: constraint.maxHeight * .27),
                             child: Text(
-                              'LIVE',
+                              'RANDOM',
                               style: TextStyle(
                                 fontSize: constraint.maxHeight * .32,
                               ),
@@ -59,7 +59,7 @@ class _VideoChatState extends State<VideoChat> {
                                 top: constraint.maxHeight * .27,
                                 bottom: constraint.maxHeight * .27),
                             child: Text(
-                              'RANDOM',
+                              'LIVE',
                               style: TextStyle(
                                 fontSize: constraint.maxHeight * .32,
                               ),
