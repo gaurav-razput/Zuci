@@ -10,7 +10,6 @@ class FavouriteList extends StatefulWidget {
 }
 
 class _FavouriteListState extends State<FavouriteList> {
-
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
@@ -18,9 +17,21 @@ class _FavouriteListState extends State<FavouriteList> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Favourite List'),
-        backgroundColor: Colors.pinkAccent,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.2, 1],
+              colors: [
+                Color(0xFFB44EB1),
+                Color(0xFFDA4D91),
+              ],
+            ),
+          ),
+        ),
       ),
-      body:StreamBuilder<QuerySnapshot>(
+      body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseMethods().fetchSubscribe(
             userId: userProvider.getUser,
           ),
@@ -35,8 +46,7 @@ class _FavouriteListState extends State<FavouriteList> {
                 padding: EdgeInsets.all(10),
                 itemCount: docList.length,
                 itemBuilder: (context, index) {
-
-                  return Custom_tile(uid:docList[index].data['to']);
+                  return Custom_tile(uid: docList[index].data['to']);
                 },
               );
             }
@@ -46,6 +56,7 @@ class _FavouriteListState extends State<FavouriteList> {
     );
   }
 }
+
 class QuietBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -83,6 +94,7 @@ class QuietBox extends StatelessWidget {
     );
   }
 }
+
 class Custom_tile extends StatefulWidget {
   final uid;
   Custom_tile({this.uid});
@@ -91,21 +103,30 @@ class Custom_tile extends StatefulWidget {
 }
 
 class _Custom_tileState extends State<Custom_tile> {
-  String name,gmail,id,coin,binded,followers,following,vip,phone_no,uid;
-  bool loading=true;
-  void getuserdata() async
-  {
-    var document = await Firestore.instance.collection('USER').document(widget.uid);
-    document.get().then((document){
+  String name,
+      gmail,
+      id,
+      coin,
+      binded,
+      followers,
+      following,
+      vip,
+      phone_no,
+      uid;
+  bool loading = true;
+  void getuserdata() async {
+    var document =
+        await Firestore.instance.collection('USER').document(widget.uid);
+    document.get().then((document) {
       name = document['name'];
-      id=document['Id'];
-    }).whenComplete((){
+      id = document['Id'];
+    }).whenComplete(() {
       setState(() {
-        loading=false;
+        loading = false;
       });
     });
-
   }
+
   @override
   void initState() {
     super.initState();
@@ -113,23 +134,55 @@ class _Custom_tileState extends State<Custom_tile> {
       getuserdata();
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Card(
-            child: Container(
-              height: 60,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Center(child: Text("$name")),
-                  Center(child: Text("$id"))
-                ],
+          child: Row(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(right: 6),
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: NetworkImage(
+                      "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
+                ),
               ),
-            ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            "$name",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
+                          ),
+                          Icon(Icons.favorite, color: Color(0xFFD34B96)),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2.0),
+                        child: Text(
+                          "$id",
+                          style: TextStyle(
+                              color: Colors.black45,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       ],

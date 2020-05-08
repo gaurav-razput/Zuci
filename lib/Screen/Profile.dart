@@ -238,7 +238,7 @@ class _ProfileState extends State<Profile> {
               children: <Widget>[
                 Container(
                   color: Colors.blueAccent,
-                  height: size.height * .37,
+                  height: size.height * .33,
                   width: double.infinity,
                 ),
                 SizedBox(
@@ -259,11 +259,12 @@ class _ProfileState extends State<Profile> {
                 options(Icons.share, "Share", 5),
                 options(Icons.settings, "Setting", 6),
                 ListTile(
+                  leading: Icon(Icons.person_pin),
                   title: Text(
                     'Logout',
-                    style: TextStyle(fontSize: 30.0),
+                    
                   ),
-                  trailing: Icon(Icons.arrow_back_ios),
+                  trailing: Icon(Icons.arrow_forward_ios),
                   onTap: () => _firebaseAuth.signOut().whenComplete(() {
                     Navigator.pop(context);
                     Navigator.push(context,

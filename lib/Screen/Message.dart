@@ -21,7 +21,7 @@ class _MessagesState extends State<Messages> {
   bool loading;
   String user_uid;
   User userinfo;
-  LiveMethod liveMethod =LiveMethod();
+  LiveMethod liveMethod = LiveMethod();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   cur_uid() async {
     FirebaseUser user = await _firebaseAuth.currentUser().whenComplete(() {
@@ -31,8 +31,9 @@ class _MessagesState extends State<Messages> {
     });
 
     user_uid = user.uid;
-    userinfo=User(uid: user.uid);
+    userinfo = User(uid: user.uid);
   }
+
   String token;
 //  Future<void> golive_methodcall() async {
 //    token=await liveMethod.GoLiveMethod(user_uid, 'name').whenComplete((){
@@ -153,7 +154,8 @@ class _MessagesState extends State<Messages> {
                           padding: EdgeInsets.all(10),
                           itemCount: docList.length,
                           itemBuilder: (context, index) {
-                            Contact contact = Contact.fromMap(docList[index].data);
+                            Contact contact =
+                                Contact.fromMap(docList[index].data);
 
                             return ContactView(contact);
                           },
@@ -183,7 +185,10 @@ class _MessagesState extends State<Messages> {
                           padding: EdgeInsets.all(10),
                           itemCount: docList.length,
                           itemBuilder: (context, index) {
-                            return history(uid:docList[index].data['to'],call: docList[index].data['call'],);
+                            return history(
+                              uid: docList[index].data['to'],
+                              call: docList[index].data['call'],
+                            );
                           },
                         );
                       }
@@ -196,10 +201,8 @@ class _MessagesState extends State<Messages> {
         ),
       ),
     );
-
   }
 }
-
 
 class ContactView extends StatelessWidget {
   final Contact contact;
@@ -236,30 +239,73 @@ class ViewLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
 
-    return ListTile(
+    return InkWell(
       onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Chat_page(
-              receiver: contact,
-              sen: userProvider.getUser,
-            ),
-          )),
-      title: Text(
-        (contact != null ? contact.name : null) != null ? contact.name : "..",
-        style:
-        TextStyle(color: Colors.black,  fontSize: 19),
-      ),
-      subtitle: LastMessageContainer(
-        stream: FirebaseMethods().fetchLastMessageBetween(
-          senderId: userProvider.getUser,
-          receiverId: contact.uid,
+        context,
+        MaterialPageRoute(
+          builder: (context) => Chat_page(
+            receiver: contact,
+            sen: userProvider.getUser,
+          ),
         ),
+      ),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(right: 6),
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(
+                        "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              (contact != null ? contact.name : null) != null
+                                  ? contact.name
+                                  : "..",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 19),
+                            ),
+                            Text(
+                              "11:23 AM",
+                              style: TextStyle(color: Colors.black45),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: LastMessageContainer(
+                            stream: FirebaseMethods().fetchLastMessageBetween(
+                              senderId: userProvider.getUser,
+                              receiverId: contact.uid,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
-
 
 class LastMessageContainer extends StatelessWidget {
   final stream;
@@ -311,7 +357,6 @@ class LastMessageContainer extends StatelessWidget {
     );
   }
 }
-
 
 class QuietBox extends StatelessWidget {
   @override
@@ -392,7 +437,7 @@ class QuietBoxHistory extends StatelessWidget {
 class history extends StatefulWidget {
   final uid;
   final call;
-  history({this.uid,this.call});
+  history({this.uid, this.call});
   @override
   _historyState createState() => _historyState();
 }
@@ -402,7 +447,7 @@ class _historyState extends State<history> {
   bool loading;
   void getuserdata(uid) async {
     var document =
-    await Firestore.instance.collection('USER').document(widget.uid);
+        await Firestore.instance.collection('USER').document(widget.uid);
     document.get().then((document) {
       name = document['name'];
       profileurl = document['profile_pic'];
@@ -412,44 +457,83 @@ class _historyState extends State<history> {
       });
     });
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    loading=true;
+    loading = true;
     getuserdata(widget.uid);
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Card(
-      child: Container(
-        height: size.height*.10,
-        child:loading?Center(child: CircularProgressIndicator()):Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Container(
-              width: size.width*0.20,
-              child: CircleAvatar(
-                backgroundColor: Colors.purpleAccent,
-              ),
-            ),
-            Container(
-              width: size.width*0.60,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text('$name'),
-                    Text(widget.call=='dial'?'Outgoing':'Incoming')
-                  ],
+    return loading
+              ? Center(child: CircularProgressIndicator()):Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(right: 6),
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: NetworkImage(
+                      "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
                 ),
               ),
-            )
-          ],
-        )
-      ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            '$name',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
+                          ),
+                          Text(
+                            "11:23 AM",
+                            style: TextStyle(color: Colors.black45),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                top: 2.0,
+                              ),
+                              child: Icon(
+                                Icons.videocam,
+                                color: Color(0xFFD34B96),
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2.0, left: 4.0),
+                            child: Text(
+                               widget.call == 'dial' ? 'Outgoing' : 'Incoming',
+                              style: TextStyle(
+                                  color: Colors.black45,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
