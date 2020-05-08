@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nanoid/generate.dart';
+
 import 'package:zuci/Screen/HomePage.dart';
+
 class RegisterWithGoogle extends StatefulWidget {
   final uid;
   final gmail;
@@ -28,9 +29,15 @@ class _RegisterWithGoogleState extends State<RegisterWithGoogle> {
   String _age;
 
   final _formKey = new GlobalKey<FormState>();
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final databaseReference = Firestore.instance;
 
+
+
+  @override
+  void initState() {
+    _isLoading = false;
+    super.initState();
+  }
   bool validateAndSave() {
     final form = _formKey.currentState;
     if (form.validate()) {
@@ -40,16 +47,10 @@ class _RegisterWithGoogleState extends State<RegisterWithGoogle> {
     return false;
   }
 
-  @override
-  void initState() {
-    _isLoading = false;
-    super.initState();
-  }
-
   void register(uid) async {
     try {
       DocumentReference documentReference =
-      Firestore.instance.document('USER/$uid}');
+      Firestore.instance.document('USER/$uid');
       Map<String, String> info = <String, String>{
         'name': '$_username',
         'email': '${widget.gmail}',

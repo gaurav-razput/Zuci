@@ -27,6 +27,13 @@ class FirebaseMethods {
 
   User user = User();
 
+//  Future<FirebaseUser> firebaseAuthWithFacebook({@required FacebookAccessToken token}) async {
+//
+//    AuthCredential credential= FacebookAuthProvider.getCredential(accessToken: token.token);
+//    AuthResult result = await _auth.signInWithCredential(credential);
+//    return result.user;
+//  }
+
   Future<FirebaseUser> signInWithgoogle() async {
     GoogleSignInAccount _signInAccount = await _googleSignIn.signIn();
     GoogleSignInAuthentication _signInAuthentication =
@@ -86,11 +93,7 @@ class FirebaseMethods {
     return user.uid;
   }
 
-  Future<void> addDataToDb(
-    uid,
-    email,
-    username,
-  ) async {
+  Future<void> addDataToDb(uid, email, username,) async {
     user = User(
       uid: uid,
       email: email,
@@ -122,8 +125,7 @@ class FirebaseMethods {
     return userList;
   }
 
-  Future<void> addMessageToDb(
-      Message message, User sender, User receiver) async {
+  Future<void> addMessageToDb(Message message, User sender, User receiver) async {
     var map = message.toMap();
 
     await _messageCollection
@@ -165,11 +167,7 @@ class FirebaseMethods {
           .collection(CONTACTS_COLLECTION)
           .document(forContact);
 
-  Future<void> addToSenderContacts(
-    String senderId,
-    String receiverId,
-    currentTime,
-  ) async {
+  Future<void> addToSenderContacts(String senderId, String receiverId, currentTime,) async {
     DocumentSnapshot senderSnapshot =
         await getContactsDocument(of: senderId, forContact: receiverId).get();
 
@@ -187,11 +185,7 @@ class FirebaseMethods {
     }
   }
 
-  Future<void> addToReceiverContacts(
-    String senderId,
-    String receiverId,
-    currentTime,
-  ) async {
+  Future<void> addToReceiverContacts(String senderId, String receiverId, currentTime,) async {
     DocumentSnapshot receiverSnapshot =
         await getContactsDocument(of: receiverId, forContact: senderId).get();
 
@@ -209,10 +203,7 @@ class FirebaseMethods {
     }
   }
 
-  Stream<QuerySnapshot> fetchLastMessageBetween({
-    @required String senderId,
-    @required String receiverId,
-  }) =>
+  Stream<QuerySnapshot> fetchLastMessageBetween({@required String senderId, @required String receiverId,}) =>
       _messageCollection
           .document(senderId)
           .collection(receiverId)
@@ -296,7 +287,9 @@ class FirebaseMethods {
     var document = await Firestore.instance.collection('USER').document(uid);
     document.get().then((document) {
       gen = document['gender'];
+
     }).whenComplete(() {
+      print('gender function is called $gen');
       return gen;
     });
   }
@@ -364,8 +357,7 @@ class FirebaseMethods {
 //    setImageMsg(url, receiverId, senderId);
 //  }
 
-  Future<void> editprofile(
-      uid, name, age, bio, onlinetime, callrate, country, no, pic) {
+  Future<void> editprofile(uid, name, age, bio, onlinetime, callrate, country, no, pic) {
     Firestore.instance.collection('USER').document('$uid').updateData({
       'name': '$name',
       'age': '$age',

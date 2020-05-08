@@ -21,7 +21,7 @@ class _ShairState extends State<Shair> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Shair"),
+          title: Text("Share"),
         ),
         body: GridView.count(
           crossAxisCount: 3,

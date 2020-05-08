@@ -19,6 +19,7 @@ class _RegistrationState extends State<Registration> {
   String _gender='Male';
   bool _isLoading;
   String _age;
+  String _country;
 
   final _formKey = new GlobalKey<FormState>();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -54,7 +55,11 @@ class _RegistrationState extends State<Registration> {
         'followers': '0',
         'following': '0',
         'uid': user_id,
-        'age':_age
+        'age':_age,
+        'bio':"",
+        'onlinetime':'',
+        'callrate':_country,
+
       };
       await documentReference.setData(info).whenComplete(() {
         Navigator.pop(context);
@@ -341,6 +346,100 @@ class _RegistrationState extends State<Registration> {
                             onSaved: (value) => _age = value.trim(),
                           ),
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: size.height * .02,
+                            right: size.height * .02,
+                            top: size.height * .01,
+                            bottom: size.height * .01,
+                          ),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Country',
+                              prefixIcon: Icon(
+                                Icons.email,
+                                color: Colors.purpleAccent,
+                                size: size.height * .03,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(8.0)),
+                                borderSide: BorderSide(color: Colors.black38),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(8.0)),
+                                borderSide: BorderSide(color: Colors.black87),
+                              ),
+                            ),
+                            validator: (value) =>
+                            value.isEmpty ? 'Country cann\'t empty' : null,
+                            onSaved: (value) => _country = value.trim(),
+                          ),
+                        ),
+//                        Padding(
+//                          padding: EdgeInsets.only(
+//                            left: size.height * .02,
+//                            right: size.height * .02,
+//                            top: size.height * .01,
+//                            bottom: size.height * .01,
+//                          ),
+//                          child: TextFormField(
+//                            decoration: InputDecoration(
+//                              labelText: 'Online Time',
+//                              prefixIcon: Icon(
+//                                Icons.email,
+//                                color: Colors.purpleAccent,
+//                                size: size.height * .03,
+//                              ),
+//                              focusedBorder: OutlineInputBorder(
+//                                borderRadius:
+//                                BorderRadius.all(Radius.circular(8.0)),
+//                                borderSide: BorderSide(color: Colors.black38),
+//                              ),
+//                              enabledBorder: OutlineInputBorder(
+//                                borderRadius:
+//                                BorderRadius.all(Radius.circular(8.0)),
+//                                borderSide: BorderSide(color: Colors.black87),
+//                              ),
+//                            ),
+//                            validator: (value) =>
+//                            value.isEmpty ? 'Online Time cann\'t empty' : null,
+//                            onSaved: (value) => _onlinetime = value.trim(),
+//                          ),
+//                        ),
+//                        Padding(
+//                          padding: EdgeInsets.only(
+//                            left: size.height * .02,
+//                            right: size.height * .02,
+//                            top: size.height * .01,
+//                            bottom: size.height * .01,
+//                          ),
+//                          child: TextFormField(
+//                            decoration: InputDecoration(
+//                              labelText: 'Call Rate',
+//                              prefixIcon: Icon(
+//                                Icons.email,
+//                                color: Colors.purpleAccent,
+//                                size: size.height * .03,
+//                              ),
+//                              focusedBorder: OutlineInputBorder(
+//                                borderRadius:
+//                                BorderRadius.all(Radius.circular(8.0)),
+//                                borderSide: BorderSide(color: Colors.black38),
+//                              ),
+//                              enabledBorder: OutlineInputBorder(
+//                                borderRadius:
+//                                BorderRadius.all(Radius.circular(8.0)),
+//                                borderSide: BorderSide(color: Colors.black87),
+//                              ),
+//                            ),
+//                            validator: (value) =>
+//                            value.isEmpty ? 'Call rate cann\'t empty' : null,
+//                            onSaved: (value) => _callrate = value.trim(),
+//                          ),
+//                        ),
+//
                         Padding(
                           padding: EdgeInsets.only(
                             left: size.height * .02,

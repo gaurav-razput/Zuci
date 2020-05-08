@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-
   int currentIndex = 1;
   var barcount = [
     VideoChat(),
@@ -26,7 +25,6 @@ class _HomePageState extends State<HomePage> {
 
 
   UserProvider userProvider;
-
   @override
   void initState() {
     super.initState();
