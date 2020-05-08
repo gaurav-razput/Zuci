@@ -36,8 +36,7 @@ class _Chat_pageState extends State<Chat_page> {
   bool isWriting = false;
   TextEditingController textFieldController = TextEditingController();
   User sender;
-
-
+  FirebaseMethods firebaseMethods =FirebaseMethods();
 
   @override
   void initState() {
@@ -69,6 +68,8 @@ class _Chat_pageState extends State<Chat_page> {
                   to: widget.receiver,
                   context: context,
                 )
+
+
                     : {},
               ),
             ),

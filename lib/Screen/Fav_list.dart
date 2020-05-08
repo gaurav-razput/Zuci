@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zuci/provider/user_provider.dart';
 import 'package:zuci/resources/firebase_methods.dart';
-import 'package:zuci/utils/universal_variables.dart';
 
 class FavouriteList extends StatefulWidget {
   @override
@@ -54,14 +53,13 @@ class QuietBox extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 25),
         child: Container(
-          color: UniversalVariables.separatorColor,
           padding: EdgeInsets.symmetric(vertical: 35, horizontal: 25),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                "This is where all the contacts are listed",
+                "This is where all the subscription are listed",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -70,7 +68,7 @@ class QuietBox extends StatelessWidget {
               ),
               SizedBox(height: 25),
               Text(
-                "Search for your friends and family to start calling or chatting with them",
+                "Subscribe for your friends and family to start calling or chatting with them",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   letterSpacing: 1.2,
@@ -78,17 +76,6 @@ class QuietBox extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              SizedBox(height: 25),
-//              FlatButton(
-//                color: UniversalVariables.lightBlueColor,
-//                child: Text("START SEARCHING"),
-//                onPressed: () => Navigator.push(
-//                  context,
-//                  MaterialPageRoute(
-//                    builder: (context) => SearchScreen(),
-//                  ),
-//                ),
-//              ),
             ],
           ),
         ),
@@ -145,9 +132,6 @@ class _Custom_tileState extends State<Custom_tile> {
             ),
           ),
         ),
-//        Center(
-//          child: loading?CircularProgressIndicator():Container(),
-//        )
       ],
     );
   }

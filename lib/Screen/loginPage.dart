@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zuci/Screen/HomePage.dart';
 import 'package:zuci/Screen/Registration.dart';
+import 'package:zuci/Screen/Rgisterwithgoogle.dart';
 import 'package:zuci/resources/firebase_methods.dart';
 
 
@@ -10,7 +12,7 @@ class LoginPAge extends StatefulWidget {
 }
 
 class _LoginPAgeState extends State<LoginPAge> {
-
+  FirebaseMethods firebaseMethods=FirebaseMethods();
   final _formKey = new GlobalKey<FormState>();
 
   String _email;
@@ -278,6 +280,7 @@ class _LoginPAgeState extends State<LoginPAge> {
                                       GestureDetector(
                                         onTap: () {
                                           print("Google button is press");
+                                          performLogin();
                                         },
                                         child: Container(
                                           // color: Colors.red,
@@ -338,5 +341,33 @@ class _LoginPAgeState extends State<LoginPAge> {
             ],
           ),
         ));
+  }
+  void performLogin() {
+
+    setState(() {
+      _isLoading=true;
+    });
+
+    firebaseMethods.signInWithgoogle().then((FirebaseUser user) {
+      if (user != null) {
+        authenticateUser(user);
+      }
+    });
+  }
+  void authenticateUser(FirebaseUser user) {
+    firebaseMethods.authenticateUserbygamil(user).then((isNewUser) {
+      setState(() {
+//        isLoginPressed = false;
+      });
+
+      if (isNewUser) {
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterWithGoogle(uid: user.uid,gmail: user.email,profile: user.photoUrl,)));
+      } else {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+              return HomePage();
+            }));
+      }
+    });
   }
 }

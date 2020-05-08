@@ -120,7 +120,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                       ),
                                     ),
                                     Text(
-                                      "24",
+                                      "${widget.receiver.age}",
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 20),
                                     ),
@@ -134,7 +134,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                       margin:
                                           EdgeInsets.all(constraint.maxWidth * .02),
                                       child: Text(
-                                        "Canada",
+                                        "${widget.receiver.country}",
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 18),
                                       ),
@@ -326,9 +326,9 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                       ),
                       Divider(),
                       items("Score", "5 Star"),
-                      items("Biography", "I love video chat with boys"),
-                      items("Price", "24 points/min"),
-                      items("Online Time", "21:00 - 19:00"),
+                      items("Biography", "${widget.receiver.bio}"),
+                      items("Price", "${widget.receiver.callrate} points/min"),
+                      items("Online Time", "${widget.receiver.onlinetime}"),
                       items("Local Time", "01-21-20 15:59:39"),
                       items("Probability", "100%"),
                       items("Grand Total", "994 minutes(s)"),

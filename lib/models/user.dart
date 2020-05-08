@@ -54,7 +54,7 @@ class User {
   int state;
   String profilePhoto;
   String id;
-  String coin,binded,vip,phone_no,followers,following;
+  String coin,binded,vip,phone_no,followers,following,gender,bio,country,callrate,age,onlinetime;
 
   User({
     this.id,
@@ -67,7 +67,13 @@ class User {
     this.followers,
     this.following,
     this.phone_no,
-    this.vip,
+    this.gender,
+    this.bio,
+    this.country,
+    this.callrate,
+    this.age,
+    this.onlinetime
+
   });
 
   Map toMap(User user) {

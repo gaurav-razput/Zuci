@@ -11,7 +11,6 @@ import 'package:zuci/models/user.dart';
 import 'package:zuci/provider/user_provider.dart';
 import 'package:zuci/resources/firebase_methods.dart';
 import 'package:zuci/utils/permissions.dart';
-import 'package:zuci/utils/universal_variables.dart';
 
 class Messages extends StatefulWidget {
   @override
@@ -35,11 +34,11 @@ class _MessagesState extends State<Messages> {
     userinfo=User(uid: user.uid);
   }
   String token;
-  Future<void> golive_methodcall() async {
-    token=await liveMethod.GoLiveMethod(user_uid, 'name').whenComplete((){
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>Host(token:token,uid: user_uid,)));
-    });
-  }
+//  Future<void> golive_methodcall() async {
+//    token=await liveMethod.GoLiveMethod(user_uid, 'name').whenComplete((){
+//      Navigator.push(context, MaterialPageRoute(builder: (context)=>Host(token:token,uid: user_uid,)));
+//    });
+//  }
   @override
   void initState() {
     super.initState();
@@ -73,14 +72,14 @@ class _MessagesState extends State<Messages> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: Text('Live'),
-          backgroundColor: Colors.pinkAccent,
-          onPressed: () async =>await Permissions.cameraAndMicrophonePermissionsGranted()?
-            golive_methodcall()
-          :{},
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+//        floatingActionButton: FloatingActionButton(
+//          child: Text('Live'),
+//          backgroundColor: Colors.pinkAccent,
+//          onPressed: () async =>await Permissions.cameraAndMicrophonePermissionsGranted()?
+//            golive_methodcall()
+//          :{},
+//        ),
+//        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: PreferredSize(
           child: Container(
             decoration: BoxDecoration(
@@ -167,89 +166,40 @@ class _MessagesState extends State<Messages> {
               ],
             ),
             //For Video History
-            ListView.builder(
-              itemCount: 8,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {},
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(right: 6),
-                              child: CircleAvatar(
-                                radius: 30,
-                                backgroundImage: NetworkImage(
-                                    "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          "HelloWorld",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16),
-                                        ),
-                                        Text(
-                                          "11:23 AM",
-                                          style:
-                                          TextStyle(color: Colors.black45),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 2.0,
-                                            ),
-                                            child: Icon(
-                                              Icons.videocam,
-                                              color: Color(0xFFD34B96),
-                                            )),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 2.0, left: 4.0),
-                                          child: Text(
-                                            "Incoming video call",
-                                            style: TextStyle(
-                                                color: Colors.black45,
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+            Stack(
+              children: <Widget>[
+                StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseMethods().fetchHistory(
+                      userId: userProvider.getUser,
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        var docList = snapshot.data.documents;
+
+                        if (docList.isEmpty) {
+                          return QuietBoxHistory();
+                        }
+                        return ListView.builder(
+                          padding: EdgeInsets.all(10),
+                          itemCount: docList.length,
+                          itemBuilder: (context, index) {
+                            return history(uid:docList[index].data['to'],call: docList[index].data['call'],);
+                          },
+                        );
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    }),
+                _showCircularProgress(),
+              ],
             ),
           ],
         ),
       ),
     );
+
   }
 }
+
 
 class ContactView extends StatelessWidget {
   final Contact contact;
@@ -370,7 +320,6 @@ class QuietBox extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 25),
         child: Container(
-          color: UniversalVariables.separatorColor,
           padding: EdgeInsets.symmetric(vertical: 35, horizontal: 25),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -394,20 +343,112 @@ class QuietBox extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              SizedBox(height: 25),
-//              FlatButton(
-//                color: UniversalVariables.lightBlueColor,
-//                child: Text("START SEARCHING"),
-//                onPressed: () => Navigator.push(
-//                  context,
-//                  MaterialPageRoute(
-//                    builder: (context) => SearchScreen(),
-//                  ),
-//                ),
-//              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class QuietBoxHistory extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 25),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 35, horizontal: 25),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "This is where all the call History are listed",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                ),
+              ),
+              SizedBox(height: 25),
+              Text(
+                "Call for your friends and family.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  letterSpacing: 1.2,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class history extends StatefulWidget {
+  final uid;
+  final call;
+  history({this.uid,this.call});
+  @override
+  _historyState createState() => _historyState();
+}
+
+class _historyState extends State<history> {
+  String name, profileurl;
+  bool loading;
+  void getuserdata(uid) async {
+    var document =
+    await Firestore.instance.collection('USER').document(widget.uid);
+    document.get().then((document) {
+      name = document['name'];
+      profileurl = document['profile_pic'];
+    }).whenComplete(() {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loading=true;
+    getuserdata(widget.uid);
+  }
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Card(
+      child: Container(
+        height: size.height*.10,
+        child:loading?Center(child: CircularProgressIndicator()):Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Container(
+              width: size.width*0.20,
+              child: CircleAvatar(
+                backgroundColor: Colors.purpleAccent,
+              ),
+            ),
+            Container(
+              width: size.width*0.60,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text('$name'),
+                    Text(widget.call=='dial'?'Outgoing':'Incoming')
+                  ],
+                ),
+              ),
+            )
+          ],
+        )
       ),
     );
   }

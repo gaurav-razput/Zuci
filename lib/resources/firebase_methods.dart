@@ -1,5 +1,7 @@
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,25 +10,47 @@ import 'package:zuci/models/contact.dart';
 import 'package:zuci/models/message.dart';
 import 'package:zuci/models/user.dart';
 
-
 class FirebaseMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   static final Firestore firestore = Firestore.instance;
+  static final Firestore _firestore = Firestore.instance;
+  StorageReference _storageReference;
+
 
   static final CollectionReference _userCollection =
       _firestore.collection(USERS_COLLECTION);
 
-  static final Firestore _firestore = Firestore.instance;
-
-
   final CollectionReference _messageCollection =
-  Firestore.instance.collection(MESSAGES_COLLECTION);
+      Firestore.instance.collection(MESSAGES_COLLECTION);
 
-//  StorageReference _storageReference;
 
-  //user class
   User user = User();
+
+  Future<FirebaseUser> signInWithgoogle() async {
+    GoogleSignInAccount _signInAccount = await _googleSignIn.signIn();
+    GoogleSignInAuthentication _signInAuthentication =
+        await _signInAccount.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: _signInAuthentication.accessToken,
+        idToken: _signInAuthentication.idToken);
+
+    AuthResult result = await _auth.signInWithCredential(credential);
+    return result.user;
+  }
+
+  Future<bool> authenticateUser(FirebaseUser user) async {
+    QuerySnapshot result = await firestore
+        .collection(USERS_COLLECTION)
+        .where(EMAIL_FIELD, isEqualTo: user.email)
+        .getDocuments();
+
+    final List<DocumentSnapshot> docs = result.documents;
+
+    //if user is registered then length of list > 0 or else less than 0
+    return docs.length == 0 ? true : false;
+  }
 
   Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser currentUser;
@@ -43,7 +67,7 @@ class FirebaseMethods {
     return User.fromMap(documentSnapshot.data);
   }
 
-  Future<bool> authenticateUser(FirebaseUser user) async {
+  Future<bool> authenticateUserbygamil(FirebaseUser user) async {
     QuerySnapshot result = await firestore
         .collection(USERS_COLLECTION)
         .where(EMAIL_FIELD, isEqualTo: user.email)
@@ -62,14 +86,17 @@ class FirebaseMethods {
     return user.uid;
   }
 
-  Future<void> addDataToDb(uid,email,username,) async {
-
+  Future<void> addDataToDb(
+    uid,
+    email,
+    username,
+  ) async {
     user = User(
-        uid: uid,
-        email:email,
-        name: username,
-        profilePhoto: "",
-         );
+      uid: uid,
+      email: email,
+      name: username,
+      profilePhoto: "",
+    );
 
     firestore
         .collection(USERS_COLLECTION)
@@ -127,6 +154,10 @@ class FirebaseMethods {
       .document(userId)
       .collection(SUBSCRIPTION_COLLECTION)
       .snapshots();
+  Stream<QuerySnapshot> fetchHistory({String userId}) => _userCollection
+      .document(userId)
+      .collection(HISTORY_COLLECTION)
+      .snapshots();
 
   DocumentReference getContactsDocument({String of, String forContact}) =>
       _userCollection
@@ -135,12 +166,12 @@ class FirebaseMethods {
           .document(forContact);
 
   Future<void> addToSenderContacts(
-      String senderId,
-      String receiverId,
-      currentTime,
-      ) async {
+    String senderId,
+    String receiverId,
+    currentTime,
+  ) async {
     DocumentSnapshot senderSnapshot =
-    await getContactsDocument(of: senderId, forContact: receiverId).get();
+        await getContactsDocument(of: senderId, forContact: receiverId).get();
 
     if (!senderSnapshot.exists) {
       //does not exists
@@ -157,12 +188,12 @@ class FirebaseMethods {
   }
 
   Future<void> addToReceiverContacts(
-      String senderId,
-      String receiverId,
-      currentTime,
-      ) async {
+    String senderId,
+    String receiverId,
+    currentTime,
+  ) async {
     DocumentSnapshot receiverSnapshot =
-    await getContactsDocument(of: receiverId, forContact: senderId).get();
+        await getContactsDocument(of: receiverId, forContact: senderId).get();
 
     if (!receiverSnapshot.exists) {
       //does not exists
@@ -187,28 +218,28 @@ class FirebaseMethods {
           .collection(receiverId)
           .orderBy("timestamp")
           .snapshots();
-//  Future<String> uploadImageToStorage(File imageFile) async {
-//    // mention try catch later on
-//
-//    try {
-//      _storageReference = FirebaseStorage.instance
-//          .ref()
-//          .child('${DateTime.now().millisecondsSinceEpoch}');
-//      StorageUploadTask storageUploadTask =
-//          _storageReference.putFile(imageFile);
-//      var url = await (await storageUploadTask.onComplete).ref.getDownloadURL();
-//      // print(url);
-//      return url;
-//    } catch (e) {
-//      return null;
-//    }
-//  }
 
+  Future<String> uploadImageToStorage(File imageFile) async {
+    // mention try catch later on
+
+    try {
+      _storageReference = FirebaseStorage.instance
+          .ref()
+          .child('${DateTime.now().millisecondsSinceEpoch}');
+      StorageUploadTask storageUploadTask =
+          _storageReference.putFile(imageFile);
+      var url = await (await storageUploadTask.onComplete).ref.getDownloadURL();
+      print(url);
+      return url;
+    } catch (e) {
+      return null;
+    }
+  }
 
   Future<User> getUserDetailsById(id) async {
     try {
       DocumentSnapshot documentSnapshot =
-      await _userCollection.document(id).get();
+          await _userCollection.document(id).get();
       return User.fromMap(documentSnapshot.data);
     } catch (e) {
       print(e);
@@ -216,70 +247,104 @@ class FirebaseMethods {
     }
   }
 
-  void setImageMsg(String url, String receiverId, String senderId) async {
-    Message message;
+//  void setImageMsg(String url, String receiverId, String senderId) async {
+//    Message message;
+//
+//    message = Message.imageMessage(
+//        message: "IMAGE",
+//        receiverId: receiverId,
+//        senderId: senderId,
+//        photoUrl: url,
+//        timestamp: Timestamp.now(),
+//        type: 'image');
+//
+//    // create imagemap
+//    var map = message.toImageMap();
+//
+//    // var map = Map<String, dynamic>();
+//    await firestore
+//        .collection(MESSAGES_COLLECTION)
+//        .document(message.senderId)
+//        .collection(message.receiverId)
+//        .add(map);
+//
+//    firestore
+//        .collection(MESSAGES_COLLECTION)
+//        .document(message.receiverId)
+//        .collection(message.senderId)
+//        .add(map);
+//  }
 
-    message = Message.imageMessage(
-        message: "IMAGE",
-        receiverId: receiverId,
-        senderId: senderId,
-        photoUrl: url,
-        timestamp: Timestamp.now(),
-        type: 'image');
-
-    // create imagemap
-    var map = message.toImageMap();
-
-    // var map = Map<String, dynamic>();
-    await firestore
-        .collection(MESSAGES_COLLECTION)
-        .document(message.senderId)
-        .collection(message.receiverId)
-        .add(map);
-
-    firestore
-        .collection(MESSAGES_COLLECTION)
-        .document(message.receiverId)
-        .collection(message.senderId)
-        .add(map);
-  }
-
-  Future<void> addCoin(uid,addcoins) async{
+  Future<void> addCoin(uid, addcoins) async {
     print('Add coin is called');
     print(uid);
     String coin;
     var document = await Firestore.instance.collection('USER').document(uid);
-    document.get().then((document){
-      coin=document['Coins'];
+    document.get().then((document) {
+      coin = document['Coins'];
       print('Previous coin is $coin');
-    }).whenComplete((){
-      Firestore.instance
-          .collection('USER')
-          .document('$uid')
-          .updateData({
-        'Coins': '${int.parse(coin)+addcoins}',
+    }).whenComplete(() {
+      Firestore.instance.collection('USER').document('$uid').updateData({
+        'Coins': '${int.parse(coin) + addcoins}',
       });
-      print('coins after update ${int.parse(coin)+addcoins}');
+      print('coins after update ${int.parse(coin) + addcoins}');
     });
-
   }
 
-  Future<void> addsubscription(of,to){
-    print('Add subscription method is called ');
-    Map<String, String> info = <String, String>{
-      'of':of,
-      'to':to
-    };
+  Future<String> gender(uid) async {
+    String gen;
+    var document = await Firestore.instance.collection('USER').document(uid);
+    document.get().then((document) {
+      gen = document['gender'];
+    }).whenComplete(() {
+      return gen;
+    });
+  }
+
+  Future<void> addsubscription(of, to) {
+    Map<String, String> info = <String, String>{'of': of, 'to': to};
     _userCollection
         .document(of)
         .collection(SUBSCRIPTION_COLLECTION)
-        .document(to).setData(info);
+        .document(to)
+        .setData(info);
   }
 
-  Future<bool> issubscribe(of,to) async {
-    var document = await Firestore.instance.collection('USER').document(of).collection(SUBSCRIPTION_COLLECTION).document(to).get();
+  Future<void> adddailhistory(of, to) {
+    Map<String, String> info = <String, String>{
+      'time': "${DateTime.now()}",
+      'to': of,
+      'call':'dial'
+    };
+    _userCollection
+        .document(of)
+        .collection(HISTORY_COLLECTION)
+        .document(to)
+        .setData(info);
+  }
+
+  Future<void> addrechistory(of, to) {
+    Map<String, String> info = <String, String>{
+      'time': "${DateTime.now()}",
+      'to': of,
+      'call':'rec'
+    };
+    _userCollection
+        .document(to)
+        .collection(HISTORY_COLLECTION)
+        .document(to)
+        .setData(info);
+  }
+
+  Future<bool> issubscribe(of, to) async {
+    var document = await Firestore.instance
+        .collection('USER')
+        .document(of)
+        .collection(SUBSCRIPTION_COLLECTION)
+        .document(to)
+        .get();
     print('is subscribe${document.exists}');
-    if(document.exists){
+    if (document.exists) {
       return true;
     }
     return false;
@@ -298,4 +363,18 @@ class FirebaseMethods {
 //
 //    setImageMsg(url, receiverId, senderId);
 //  }
+
+  Future<void> editprofile(
+      uid, name, age, bio, onlinetime, callrate, country, no, pic) {
+    Firestore.instance.collection('USER').document('$uid').updateData({
+      'name': '$name',
+      'age': '$age',
+      'bio': '$bio',
+      'onlinetime': '$onlinetime',
+      'callrate': '$callrate',
+      'country': '$country',
+      'phone_no': '$no',
+      'profile_pic': '$pic'
+    });
+  }
 }

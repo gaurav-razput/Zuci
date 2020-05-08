@@ -4,6 +4,8 @@ const String CALL_COLLECTION = "call";
 const String VOICE_CALL_COLLECTION = "call";
 const String CONTACTS_COLLECTION = "contacts";
 const String LIVE_COLLECTION = "contacts";
+const String HISTORY_COLLECTION = "history";
+
 
 const String SUBSCRIPTION_COLLECTION = "subscription";
 

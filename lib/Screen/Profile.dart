@@ -6,8 +6,8 @@ import 'package:zuci/Screen/PhoneBind.dart';
 import 'package:zuci/Screen/Settings.dart';
 import 'package:zuci/Screen/Shair.dart';
 import 'package:zuci/Screen/Vip.dart';
+import 'package:zuci/Screen/editProfile.dart';
 import 'package:zuci/Screen/loginPage.dart';
-
 
 class Profile extends StatefulWidget {
   @override
@@ -15,8 +15,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
-  FirebaseUser user ;
+  FirebaseUser user;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Widget _showCircularProgress() {
@@ -26,11 +25,8 @@ class _ProfileState extends State<Profile> {
         decoration: BoxDecoration(
           color: Colors.black12,
           backgroundBlendMode: BlendMode.darken,
-
         ),
-        child: Center(
-            child: CircularProgressIndicator()
-        ),
+        child: Center(child: CircularProgressIndicator()),
         height: size.height,
         width: size.width,
       );
@@ -41,31 +37,45 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  String name,
+      gmail,
+      id,
+      coin,
+      binded,
+      followers,
+      following,
+      callrate,
+      phone_no,
+      uid,
+      profile,
+      onlinetime,
+      age;
+  bool loading = true;
 
-  String name,gmail,id,coin,binded,followers,following,vip,phone_no,uid;
-  bool loading=true;
-
-  void getuserdata() async
-  {
+  void getuserdata() async {
     user = await FirebaseAuth.instance.currentUser();
-    var document = await Firestore.instance.collection('USER').document(user.uid);
-    document.get().then((document){
+    var document =
+        await Firestore.instance.collection('USER').document(user.uid);
+    document.get().then((document) {
       name = document['name'];
       gmail = document['gmail'];
-      id=document['Id'];
-      coin=document['Coins'];
-      binded=document['Binded'];
-      followers=document['followers'];
-      following=document['following'];
-      vip=document['Vip'];
-      phone_no=document['phone_no'];
-    }).whenComplete((){
+      id = document['Id'];
+      coin = document['Coins'];
+      binded = document['Binded'];
+      followers = document['followers'];
+      following = document['following'];
+      callrate = document['callrate'];
+      phone_no = document['phone_no'];
+      age = document['age'];
+      onlinetime = document['onlinetime'];
+      profile = document['profile_pic'];
+    }).whenComplete(() {
       setState(() {
-        loading=false;
+        loading = false;
       });
     });
-
   }
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +83,7 @@ class _ProfileState extends State<Profile> {
       getuserdata();
     });
   }
+
   _neverSatisfied() {
     return showDialog(
       context: context,
@@ -144,7 +155,16 @@ class _ProfileState extends State<Profile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Vip(),
+                  builder: (context) => EditProfile(
+                    name: 'Gaurav',
+                    age: age,
+                    bio: 'something',
+                    callrate: callrate,
+                    mobilenumber: phone_no,
+                    uid: user.uid,
+                    onlinetime: onlinetime,
+                    profile_pic: profile,
+                  ),
                 ),
               );
               break;
@@ -154,7 +174,10 @@ class _ProfileState extends State<Profile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Coins(coins: coin,uid:user.uid,),
+                  builder: (context) => Coins(
+                    coins: coin,
+                    uid: user.uid,
+                  ),
                 ),
               );
               break;
@@ -229,20 +252,23 @@ class _ProfileState extends State<Profile> {
                     Container(child: Text("$following Following"))
                   ],
                 ),
-//                options(Icons.attach_money, "VIP", 1),
+                options(Icons.edit, "Edit Profile", 1),
                 options(Icons.attach_money, "Get Coins", 2),
                 options(Icons.person, "Acount Info", 3),
                 options(Icons.phone_iphone, "Phone Bonding", 4),
                 options(Icons.share, "Share", 5),
                 options(Icons.settings, "Setting", 6),
                 ListTile(
-                  title: Text('Logout',style: TextStyle(fontSize: 30.0),),
+                  title: Text(
+                    'Logout',
+                    style: TextStyle(fontSize: 30.0),
+                  ),
                   trailing: Icon(Icons.arrow_back_ios),
-                  onTap: ()=>_firebaseAuth.signOut().whenComplete((){
+                  onTap: () => _firebaseAuth.signOut().whenComplete(() {
                     Navigator.pop(context);
-                    Navigator.push(context,MaterialPageRoute(builder: (context)=>LoginPAge()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginPAge()));
                   }),
-
                 )
               ],
             ),
@@ -290,8 +316,8 @@ class _ProfileState extends State<Profile> {
             ),
             _showCircularProgress(),
           ],
-        ),//Stack
-      ),//sinlechildscrollview
+        ), //Stack
+      ), //sinlechildscrollview
     );
   }
 }

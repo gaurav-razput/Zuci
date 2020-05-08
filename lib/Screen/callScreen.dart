@@ -9,21 +9,21 @@ import 'package:zuci/callScreen/configs/agora_configs.dart';
 import 'package:zuci/models/call.dart';
 import 'package:zuci/provider/user_provider.dart';
 import 'package:zuci/resources/call_methods.dart';
+import 'package:zuci/resources/firebase_methods.dart';
 
 class CallScreen extends StatefulWidget {
   final Call call;
-
   CallScreen({
     @required this.call,
   });
-
   @override
   _CallScreenState createState() => _CallScreenState();
 }
 
 class _CallScreenState extends State<CallScreen> {
   final CallMethods callMethods = CallMethods();
-
+  FirebaseMethods firebaseMethods=FirebaseMethods();
+  bool userjoin;
   UserProvider userProvider;
   StreamSubscription callStreamSubscription;
 
@@ -34,6 +34,7 @@ class _CallScreenState extends State<CallScreen> {
   @override
   void initState() {
     super.initState();
+    userjoin=false;
     addPostFrameCallback();
     initializeAgora();
   }
@@ -106,6 +107,7 @@ class _CallScreenState extends State<CallScreen> {
     };
 
     AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
+
       setState(() {
         final info = 'onUserJoined: $uid';
         _infoStrings.add(info);

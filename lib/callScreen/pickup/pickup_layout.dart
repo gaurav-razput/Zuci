@@ -16,19 +16,15 @@ class PickupLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
-    print('User Id id ${userProvider.getUser}');
-
     return (userProvider != null && userProvider.getUser != null)
         ? StreamBuilder<DocumentSnapshot>(
             stream: callMethods.callStream(uid: userProvider.getUser),
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data.data != null) {
                 Call call = Call.fromMap(snapshot.data.data);
-
                 if (!call.hasDialled) {
                   return PickupScreen(call: call);
                 }
-
               }
               return scaffold;
             },

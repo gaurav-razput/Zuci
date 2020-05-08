@@ -51,6 +51,7 @@ class _paymentState extends State<payment> {
     try {
       _razorpay.open(options);
     } catch (e) {
+      _razorpay.clear();
       debugPrint(e);
     }
   }
@@ -61,6 +62,7 @@ class _paymentState extends State<payment> {
       payment_done=true;
       UserProvider userProvider = Provider.of<UserProvider>(context,listen: false);
       firebaseMethods.addCoin(userProvider.getUser, int.parse(widget.amount)).whenComplete((){
+        _razorpay.clear();
         Navigator.pop(context);
         Navigator.pop(context);
       });
@@ -71,11 +73,13 @@ class _paymentState extends State<payment> {
     Fluttertoast.showToast(
         msg: "ERROR: " + response.code.toString() + " - " + response.message,
         timeInSecForIos: 4);
+    _razorpay.clear();
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     Fluttertoast.showToast(
         msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIos: 4);
+    _razorpay.clear();
   }
   @override
   Widget build(BuildContext context) {
