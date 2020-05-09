@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zuci/resources/firebase_methods.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +12,7 @@ class EditProfile extends StatefulWidget {
   final profile_pic;
   final onlinetime;
   final bio;
+  final country;
   EditProfile(
       {this.name,
       this.uid,
@@ -19,7 +21,8 @@ class EditProfile extends StatefulWidget {
       this.callrate,
       this.mobilenumber,
       this.onlinetime,
-      this.profile_pic});
+      this.profile_pic,
+      this.country});
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -54,11 +57,18 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future<void> getImage() async {
+    setState(() {
+      _isLoading=true;
+    });
     _isLoading = true;
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     profile_url=
         await firebaseMethods.uploadImageToStorage(image).whenComplete(() {
+          Firestore.instance.collection('USER').document('${widget.uid}').updateData({
+            'profile_pic': '$profile_url',
+          });
           setState(() {
+
             _isLoading = false;
             _profile_pic=profile_url;
           });
@@ -83,27 +93,16 @@ class _EditProfileState extends State<EditProfile> {
               Card(
                 child:ListView(
                         children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.only(
-                                left: size.height * .02,
-                                right: size.height * .02,
-                                top: size.height * .01,
-                                bottom: size.height * .01,
+                          Center(
+                            child: CircleAvatar(
+                              radius: size.height * .07,
+                              backgroundColor: Colors.red,
+                              backgroundImage: NetworkImage(widget.profile_pic==null?
+                              "https://images.pexels.com/photos/3762775/pexels-photo-3762775.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                                  :widget.profile_pic
                               ),
-                              child: Container(
-                                height: 130.0,
-                                width: 130.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.purpleAccent,
-                                  image: widget.profile_pic == null
-                                      ? DecorationImage(image: NetworkImage("https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"))
-                                      : DecorationImage(
-                                          image: NetworkImage(_profile_pic == null
-                                              ? widget.profile_pic
-                                              : _profile_pic)),
-                                ),
-                              )),
+                            ),
+                          ),
                           Center(
                             child: GestureDetector(
                               onTap: () => getImage(),
@@ -198,6 +197,7 @@ class _EditProfileState extends State<EditProfile> {
                                   borderSide: BorderSide(color: Colors.black87),
                                 ),
                               ),
+                              initialValue: widget.bio,
                               validator: (value) =>
                                   value.isEmpty ? 'Bio cann\'t empty' : null,
                               onSaved: (value) => _bio = value.trim(),
@@ -211,7 +211,7 @@ class _EditProfileState extends State<EditProfile> {
                               bottom: size.height * .01,
                             ),
                             child: TextFormField(
-                              initialValue: _mobilenumber,
+                              initialValue: widget.mobilenumber,
                               decoration: InputDecoration(
                                 labelText: 'Mobile Number',
                                 hintText: 'Current mobile number',
@@ -226,6 +226,7 @@ class _EditProfileState extends State<EditProfile> {
                                   borderSide: BorderSide(color: Colors.black87),
                                 ),
                               ),
+
                               validator: (value) => value.length == 10
                                   ? 'Enter correct number '
                                   : null,
@@ -240,6 +241,7 @@ class _EditProfileState extends State<EditProfile> {
                               bottom: size.height * .01,
                             ),
                             child: TextFormField(
+                              initialValue: widget.onlinetime,
                               decoration: InputDecoration(
                                 labelText: 'Online Time',
                                 hintText: '${widget.onlinetime}',
@@ -268,6 +270,7 @@ class _EditProfileState extends State<EditProfile> {
                               bottom: size.height * .01,
                             ),
                             child: TextFormField(
+                              initialValue: widget.callrate,
                               decoration: InputDecoration(
                                 labelText: 'Call Rate/Min',
                                 hintText: '${widget.callrate}',
@@ -295,9 +298,10 @@ class _EditProfileState extends State<EditProfile> {
                               bottom: size.height * .01,
                             ),
                             child: TextFormField(
+                              initialValue: widget.country,
                               decoration: InputDecoration(
                                 labelText: 'Country',
-                                hintText: '${widget.callrate}',
+                                hintText: '${widget.country}',
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8.0)),
@@ -316,6 +320,9 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                           GestureDetector(
                             onTap: () {
+                              setState(() {
+                                _isLoading=true;
+                              });
 
                               if (validateAndSave()) {
                                 firebaseMethods.editprofile(
@@ -329,8 +336,10 @@ class _EditProfileState extends State<EditProfile> {
                                     _mobilenumber,
                                   _profile_pic==null?widget.profile_pic:_profile_pic
                                 );
+                                  Navigator.pop(context);
+
                               }
-                              Navigator.pop(context);
+
                             },
                             child: Padding(
                               padding: EdgeInsets.only(

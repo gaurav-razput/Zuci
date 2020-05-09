@@ -17,39 +17,13 @@ class VideoChat extends StatefulWidget {
 }
 
 class _VideoChatState extends State<VideoChat> {
-  FirebaseMethods firebaseMethods = FirebaseMethods();
-
-  String gender;
   bool _isloading;
-  Future<void> Gender(uid) async {
-    String gen;
-    var document = await Firestore.instance.collection('USER').document(uid);
-    document.get().then((document) {
-      gen = document['gender'];
-    }).whenComplete(() {
-      gender = gen;
-      if (gen == 'Male') {
-        gender = 'Female';
-        print(gender);
-      }
-      if (gen == 'Female') {
-        gender = 'Male';
-      }
-    });
-  }
 
-  UserProvider userProvider;
   @override
   void initState() {
-    UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
     super.initState();
     _isloading = false;
-    Gender(userProvider.getUser).whenComplete(() {
-      setState(() {
-        _isloading = false;
-      });
-    });
+
   }
 
   @override
@@ -259,7 +233,7 @@ class _VideoChatState extends State<VideoChat> {
                         StreamBuilder<QuerySnapshot>(
                             stream: Firestore.instance
                                 .collection("USER")
-                                .where('gender', isEqualTo: widget.gender)
+                                .where('gender', isEqualTo: userProvid.getGender)
                                 .snapshots(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -459,7 +433,7 @@ class _VideoChatState extends State<VideoChat> {
                   StreamBuilder<QuerySnapshot>(
                       stream: Firestore.instance
                           .collection("USER")
-                          .where('gender', isEqualTo: gender)
+                          .where('gender', isEqualTo:userProvid.getGender)
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {

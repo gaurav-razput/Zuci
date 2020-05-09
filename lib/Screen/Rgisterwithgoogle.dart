@@ -27,6 +27,7 @@ class _RegisterWithGoogleState extends State<RegisterWithGoogle> {
   String _gender='Male';
   bool _isLoading;
   String _age;
+  String _country;
 
   final _formKey = new GlobalKey<FormState>();
   final databaseReference = Firestore.instance;
@@ -63,6 +64,9 @@ class _RegisterWithGoogleState extends State<RegisterWithGoogle> {
         'following': '0',
         'uid': uid,
         'age':_age,
+        'bio':'',
+        'callrate':'',
+        'country':_country,
         'profile_pic':'${widget.profile}'
       };
       await documentReference.setData(info).whenComplete(() {
@@ -269,7 +273,6 @@ class _RegisterWithGoogleState extends State<RegisterWithGoogle> {
                                 ),
                               ),
                             ),
-
                             Padding(
                               padding: EdgeInsets.only(
                                 left: size.height * .02,
@@ -301,7 +304,37 @@ class _RegisterWithGoogleState extends State<RegisterWithGoogle> {
                                 onSaved: (value) => _age = value.trim(),
                               ),
                             ),
-
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: size.height * .02,
+                                right: size.height * .02,
+                                top: size.height * .01,
+                                bottom: size.height * .01,
+                              ),
+                              child: TextFormField(
+                                keyboardType:TextInputType.numberWithOptions(),
+                                decoration: InputDecoration(
+                                  labelText: 'Country',
+                                  prefixIcon: Icon(
+                                    Icons.date_range,
+                                    color: Colors.purpleAccent,
+                                    size: size.height * .03,
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0)),
+                                    borderSide: BorderSide(color: Colors.black38),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0)),
+                                    borderSide: BorderSide(color: Colors.black87),
+                                  ),
+                                ),
+                                validator: (value) =>value.isEmpty? 'Country cann\'t empty' : null,
+                                onSaved: (value) => _country = value.trim(),
+                              ),
+                            ),
                             Padding(
                               padding: EdgeInsets.only(
                                 left: size.height * .04,

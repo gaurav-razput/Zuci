@@ -58,7 +58,8 @@ class _RegistrationState extends State<Registration> {
         'age':_age,
         'bio':"",
         'onlinetime':'',
-        'callrate':_country,
+        'country':_country,
+        'profile':'',
 
       };
       await documentReference.setData(info).whenComplete(() {
@@ -120,16 +121,13 @@ class _RegistrationState extends State<Registration> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
+    return _isLoading?Center(child: CircularProgressIndicator()): Scaffold(
         body: Stack(
       children: <Widget>[
         Form(
             key: _formKey,
             child: ListView(
               children: <Widget>[
-                Center(
-                    // child: Image.asset("assets/Image/IMG_4073.jpg"),
-                    ),
                 Padding(
                   padding: EdgeInsets.only(
                     left: size.height * .015,
@@ -148,16 +146,6 @@ class _RegistrationState extends State<Registration> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(20.0),
-                        //   child: Center(
-                        //     child: Text(
-                        //       'Register',
-                        //       style: TextStyle(
-                        //           fontWeight: FontWeight.bold, fontSize: 20.0),
-                        //     ),
-                        //   ),
-                        // ),
                         Padding(
                           padding: EdgeInsets.only(
                             left: size.height * .02,
@@ -377,69 +365,6 @@ class _RegistrationState extends State<Registration> {
                             onSaved: (value) => _country = value.trim(),
                           ),
                         ),
-//                        Padding(
-//                          padding: EdgeInsets.only(
-//                            left: size.height * .02,
-//                            right: size.height * .02,
-//                            top: size.height * .01,
-//                            bottom: size.height * .01,
-//                          ),
-//                          child: TextFormField(
-//                            decoration: InputDecoration(
-//                              labelText: 'Online Time',
-//                              prefixIcon: Icon(
-//                                Icons.email,
-//                                color: Colors.purpleAccent,
-//                                size: size.height * .03,
-//                              ),
-//                              focusedBorder: OutlineInputBorder(
-//                                borderRadius:
-//                                BorderRadius.all(Radius.circular(8.0)),
-//                                borderSide: BorderSide(color: Colors.black38),
-//                              ),
-//                              enabledBorder: OutlineInputBorder(
-//                                borderRadius:
-//                                BorderRadius.all(Radius.circular(8.0)),
-//                                borderSide: BorderSide(color: Colors.black87),
-//                              ),
-//                            ),
-//                            validator: (value) =>
-//                            value.isEmpty ? 'Online Time cann\'t empty' : null,
-//                            onSaved: (value) => _onlinetime = value.trim(),
-//                          ),
-//                        ),
-//                        Padding(
-//                          padding: EdgeInsets.only(
-//                            left: size.height * .02,
-//                            right: size.height * .02,
-//                            top: size.height * .01,
-//                            bottom: size.height * .01,
-//                          ),
-//                          child: TextFormField(
-//                            decoration: InputDecoration(
-//                              labelText: 'Call Rate',
-//                              prefixIcon: Icon(
-//                                Icons.email,
-//                                color: Colors.purpleAccent,
-//                                size: size.height * .03,
-//                              ),
-//                              focusedBorder: OutlineInputBorder(
-//                                borderRadius:
-//                                BorderRadius.all(Radius.circular(8.0)),
-//                                borderSide: BorderSide(color: Colors.black38),
-//                              ),
-//                              enabledBorder: OutlineInputBorder(
-//                                borderRadius:
-//                                BorderRadius.all(Radius.circular(8.0)),
-//                                borderSide: BorderSide(color: Colors.black87),
-//                              ),
-//                            ),
-//                            validator: (value) =>
-//                            value.isEmpty ? 'Call rate cann\'t empty' : null,
-//                            onSaved: (value) => _callrate = value.trim(),
-//                          ),
-//                        ),
-//
                         Padding(
                           padding: EdgeInsets.only(
                             left: size.height * .02,

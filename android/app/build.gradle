@@ -41,7 +41,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.zuci"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -51,9 +51,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+//            minifyEnabled true
             useProguard true
-            shrinkResources true
+//            shrinkResources true
             proguardFiles getDefaultProguardFile(
                     'proguard-android-optimize.txt'),
                     'proguard-rules.pro'

@@ -40,6 +40,7 @@ class _ProfileState extends State<Profile> {
   String name,
       gmail,
       id,
+      bio,
       coin,
       binded,
       followers,
@@ -69,6 +70,7 @@ class _ProfileState extends State<Profile> {
       age = document['age'];
       onlinetime = document['onlinetime'];
       profile = document['profile_pic'];
+      bio = document['bio'];
     }).whenComplete(() {
       setState(() {
         loading = false;
@@ -156,9 +158,9 @@ class _ProfileState extends State<Profile> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditProfile(
-                    name: 'Gaurav',
+                    name: '$name',
                     age: age,
-                    bio: 'something',
+                    bio: '$bio',
                     callrate: callrate,
                     mobilenumber: phone_no,
                     uid: user.uid,
@@ -217,6 +219,14 @@ class _ProfileState extends State<Profile> {
               );
               break;
             }
+          case 7:
+            {
+              _firebaseAuth.signOut().whenComplete(() {
+                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPAge()));
+              });
+            }
         }
       },
       child: ListTile(
@@ -258,19 +268,20 @@ class _ProfileState extends State<Profile> {
                 options(Icons.phone_iphone, "Phone Bonding", 4),
                 options(Icons.share, "Share", 5),
                 options(Icons.settings, "Setting", 6),
-                ListTile(
-                  leading: Icon(Icons.person_pin),
-                  title: Text(
-                    'Logout',
-                    
-                  ),
-                  trailing: Icon(Icons.arrow_forward_ios),
-                  onTap: () => _firebaseAuth.signOut().whenComplete(() {
-                    Navigator.pop(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPAge()));
-                  }),
-                )
+                options(Icons.clear, "Logoug", 7),
+
+//                ListTile(
+//                  title: Text(
+//                    'Logout',
+//                    style: TextStyle(fontSize: 30.0),
+//                  ),
+//                  trailing: Icon(Icons.arrow_back_ios),
+//                  onTap: () => _firebaseAuth.signOut().whenComplete(() {
+//                    Navigator.pop(context);
+//                    Navigator.push(context,
+//                        MaterialPageRoute(builder: (context) => LoginPAge()));
+//                  }),
+//                )
               ],
             ),
             Container(
@@ -287,8 +298,10 @@ class _ProfileState extends State<Profile> {
                     CircleAvatar(
                       radius: size.height * .07,
                       backgroundColor: Colors.red,
-                      backgroundImage: NetworkImage(
-                          "https://images.pexels.com/photos/3762775/pexels-photo-3762775.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
+                      backgroundImage: NetworkImage(profile==null?
+                          "https://images.pexels.com/photos/3762775/pexels-photo-3762775.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                      :profile
+                      ),
                     ),
                     Container(
                       margin: EdgeInsets.all(4),

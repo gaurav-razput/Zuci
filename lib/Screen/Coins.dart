@@ -114,7 +114,7 @@ class _CoinsState extends State<Coins> {
                   child:InkWell(
                     onTap: () {
                       if(validateAndSave()){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>payment(amount: cal_amount(_coins).toString(),)));
+//                        Navigator.push(context, MaterialPageRoute(builder: (context)=>payment(amount: cal_amount(_coins).toString(),)));
                       }
                     },
                     child: Container(
