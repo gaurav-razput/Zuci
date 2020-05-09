@@ -306,7 +306,7 @@ class FirebaseMethods {
   Future<void> adddailhistory(of, to) {
     Map<String, String> info = <String, String>{
       'time': "${DateTime.now()}",
-      'to': of,
+      'to': to,
       'call':'dial'
     };
     _userCollection
