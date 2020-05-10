@@ -33,7 +33,8 @@ dependencies:
   firebase_storage: ^3.1.5
   fluttertoast: ^3.0.3
   image_picker: ^0.6.6+1
-
+  razorpay_flutter: 1.1.1
+#  razorpay_flutter: 1.1.0-alpha
   
 dev_dependencies:
   flutter_test:

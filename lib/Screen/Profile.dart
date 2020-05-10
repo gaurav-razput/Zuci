@@ -268,20 +268,7 @@ class _ProfileState extends State<Profile> {
                 options(Icons.phone_iphone, "Phone Bonding", 4),
                 options(Icons.share, "Share", 5),
                 options(Icons.settings, "Setting", 6),
-                options(Icons.clear, "Logoug", 7),
-
-//                ListTile(
-//                  title: Text(
-//                    'Logout',
-//                    style: TextStyle(fontSize: 30.0),
-//                  ),
-//                  trailing: Icon(Icons.arrow_back_ios),
-//                  onTap: () => _firebaseAuth.signOut().whenComplete(() {
-//                    Navigator.pop(context);
-//                    Navigator.push(context,
-//                        MaterialPageRoute(builder: (context) => LoginPAge()));
-//                  }),
-//                )
+                options(Icons.clear, "Logout", 7),
               ],
             ),
             Container(
