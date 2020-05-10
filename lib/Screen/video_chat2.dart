@@ -9,8 +9,7 @@ import 'package:zuci/utils/permissions.dart';
 
 class NxtVideoChat extends StatefulWidget {
   final User receiver;
-  final user;
-  NxtVideoChat({this.receiver,this.user});
+  NxtVideoChat({this.receiver,});
 
   @override
   _NxtVideoChatState createState() => _NxtVideoChatState();
@@ -22,18 +21,13 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
   bool loading=true;
   bool _issubscribe;
   Future<void> check_subscription() async {
-    print(_issubscribe);
-
-    print('Check subscription is called');
-
     _issubscribe = await firebaseMethods.issubscribe(
-        widget.user, widget.receiver.uid);
+        user.uid, widget.receiver.uid);
     print(_issubscribe);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     _issubscribe = false;
     super.initState();
     check_subscription().whenComplete(() {
@@ -67,7 +61,9 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                            "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                              userProvider.getUser.profilePhoto == null
+                                  ? "https://images.pexels.com/photos/3762775/pexels-photo-3762775.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                                  : userProvider.getUser.profilePhoto
                           ),
                         ),
                       ),

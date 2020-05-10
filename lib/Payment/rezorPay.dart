@@ -59,7 +59,7 @@ class _paymentState extends State<payment> {
     setState(() {
       payment_done=true;
       UserProvider userProvider = Provider.of<UserProvider>(context,listen: false);
-      firebaseMethods.addCoin(userProvider.getUser, int.parse(widget.amount)).whenComplete((){
+      firebaseMethods.addCoin(userProvider.getUser.uid, int.parse(widget.amount)).whenComplete((){
         Navigator.pop(context);
         Navigator.pop(context);
       });

@@ -238,18 +238,14 @@ class FirebaseMethods {
     }
   }
   Future<void> addCoin(uid, addcoins) async {
-    print('Add coin is called');
-    print(uid);
     String coin;
     var document = await Firestore.instance.collection('USER').document(uid);
     document.get().then((document) {
       coin = document['Coins'];
-      print('Previous coin is $coin');
     }).whenComplete(() {
       Firestore.instance.collection('USER').document('$uid').updateData({
         'Coins': '${int.parse(coin) + addcoins}',
       });
-      print('coins after update ${int.parse(coin) + addcoins}');
     });
   }
 

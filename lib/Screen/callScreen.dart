@@ -7,20 +7,27 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:zuci/callScreen/configs/agora_configs.dart';
 import 'package:zuci/models/call.dart';
+import 'package:zuci/models/user.dart';
 import 'package:zuci/provider/user_provider.dart';
 import 'package:zuci/resources/call_methods.dart';
 import 'package:zuci/resources/firebase_methods.dart';
 
 class CallScreen extends StatefulWidget {
   final Call call;
+  final User from;
+  final User to;
   CallScreen({
     @required this.call,
+    @required this.from,
+    @required this.to,
   });
   @override
   _CallScreenState createState() => _CallScreenState();
 }
 
 class _CallScreenState extends State<CallScreen> {
+  DateTime before;
+  DateTime after;
   final CallMethods callMethods = CallMethods();
   FirebaseMethods firebaseMethods=FirebaseMethods();
   bool userjoin;
@@ -30,7 +37,11 @@ class _CallScreenState extends State<CallScreen> {
   static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
-
+//  @override
+//  void dispose() {
+//    _timer.cancel();
+//    super.dispose();
+//  }
   @override
   void initState() {
     super.initState();
@@ -107,7 +118,8 @@ class _CallScreenState extends State<CallScreen> {
     };
 
     AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
-
+      startTimer();
+      before=DateTime.now();
       setState(() {
         final info = 'onUserJoined: $uid';
         _infoStrings.add(info);
@@ -131,6 +143,9 @@ class _CallScreenState extends State<CallScreen> {
 
     AgoraRtcEngine.onUserOffline = (int a, int b) {
       callMethods.endCall(call: widget.call);
+      after = DateTime.now();
+      minusCoins(widget.to.callrate, widget.from.uid);
+
       setState(() {
         final info = 'onUserOffline: a: ${a.toString()}, b: ${b.toString()}';
         _infoStrings.add(info);
@@ -317,8 +332,42 @@ class _CallScreenState extends State<CallScreen> {
     super.dispose();
   }
 
+  Timer _timer;
+
+  int _sec ;
+
+  void startTimer() {
+    DateTime before = DateTime.now();
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+          (Timer timer) => setState(
+            () {
+          if (_sec < 1) {
+            callMethods.endCall(call: widget.call);
+            timer.cancel();
+          } else {
+            _sec = _sec - 1;
+          }
+        },
+      ),
+    );
+  }
+  void minusCoins(callrate,uid) async {
+    int coinTominus=before.difference(after).inMinutes*callrate;
+    String coin;
+    var document = await Firestore.instance.collection('USER').document(uid);
+    document.get().then((document) {
+      coin = document['Coins'];
+    }).whenComplete(() {
+      Firestore.instance.collection('USER').document('$uid').updateData({
+        'Coins': '${int.parse(coin) - coinTominus}',
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    _sec = (int.parse(widget.from.coin)/int.parse(widget.to.coin)).round()*60;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(

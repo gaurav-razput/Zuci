@@ -23,19 +23,17 @@ class _VideoChatState extends State<VideoChat> {
   void initState() {
     super.initState();
     _isloading = false;
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     UserProvider userProvid = Provider.of<UserProvider>(context);
     Size size = MediaQuery.of(context).size;
     final double itemHeight = size.height * .1;
     final double itemWidth = size.width * .31;
     return DefaultTabController(
       length: 3,
-      child:Scaffold(
+      child: Scaffold(
         appBar: PreferredSize(
           child: Container(
             decoration: BoxDecoration(
@@ -103,117 +101,333 @@ class _VideoChatState extends State<VideoChat> {
           ),
           preferredSize: Size.fromHeight(size.height * .07),
         ),
-        body: _isloading?Center(child: CircularProgressIndicator()):TabBarView(
-          children: <Widget>[
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: size.height * .02),
-                  height: size.height * .06,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
+        body: _isloading
+            ? Center(child: CircularProgressIndicator())
+            : TabBarView(
+                children: <Widget>[
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(
-                          left: size.width * .04,
-                          right: size.width * .02,
-                        ),
-                        width: size.width * .3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: Color(0xFFE6EAEB),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "All",
-                            style: TextStyle(
-                              color: Color(0xFF808080),
+                        margin:
+                            EdgeInsets.symmetric(vertical: size.height * .02),
+                        height: size.height * .06,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: size.width * .04,
+                                right: size.width * .02,
+                              ),
+                              width: size.width * .3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Color(0xFFE6EAEB),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "All",
+                                  style: TextStyle(
+                                    color: Color(0xFF808080),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: size.width * .04,
+                                right: size.width * .02,
+                              ),
+                              width: size.width * .3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Color(0xFFE6EAEB),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "English",
+                                  style: TextStyle(
+                                    color: Color(0xFF808080),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: size.width * .04,
+                                right: size.width * .02,
+                              ),
+                              width: size.width * .3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Color(0xFFE6EAEB),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Arabic",
+                                  style: TextStyle(
+                                    color: Color(0xFF808080),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: size.width * .04,
+                                right: size.width * .02,
+                              ),
+                              width: size.width * .3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Color(0xFFE6EAEB),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Indian",
+                                  style: TextStyle(
+                                    color: Color(0xFF808080),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: size.width * .04,
+                                right: size.width * .02,
+                              ),
+                              width: size.width * .3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Color(0xFFE6EAEB),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "All",
+                                  style: TextStyle(
+                                    color: Color(0xFF808080),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          left: size.width * .04,
-                          right: size.width * .02,
-                        ),
-                        width: size.width * .3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: Color(0xFFE6EAEB),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "English",
-                            style: TextStyle(
-                              color: Color(0xFF808080),
-                            ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: size.width * .05,
+                            right: size.width * .05,
+                            top: size.height * .03,
                           ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          left: size.width * .04,
-                          right: size.width * .02,
-                        ),
-                        width: size.width * .3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: Color(0xFFE6EAEB),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Arabic",
-                            style: TextStyle(
-                              color: Color(0xFF808080),
-                            ),
+                          child: Stack(
+                            children: <Widget>[
+                              Container(
+                                  child: _isloading
+                                      ?Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      :Container(
+                                          height: 0.0,
+                                          width: 0.0,
+                                        )),
+                              StreamBuilder<QuerySnapshot>(
+                                  stream: Firestore.instance
+                                      .collection("USER")
+                                      .where('gender',
+                                          isEqualTo: userProvid.getGender)
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.hasError) {
+                                      return new Text(
+                                          'Error: ${snapshot.error}');
+                                    }
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text("Loading..."),
+                                            SizedBox(
+                                              height: 50.0,
+                                            ),
+                                            CircularProgressIndicator()
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      return GridView.builder(
+                                        shrinkWrap: true,
+                                        //physics: NeverScrollableScrollPhysics(),
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 2,
+                                                childAspectRatio:
+                                                    itemHeight / itemWidth,
+                                                crossAxisSpacing:
+                                                    size.width * .05,
+                                                mainAxisSpacing:
+                                                    size.height * .02),
+
+                                        itemCount:
+                                            snapshot.data.documents.length,
+                                        itemBuilder: (_, index) =>
+                                            LayoutBuilder(
+                                          builder: (ctx, constraint) {
+                                            User rec = User(
+                                              name: snapshot.data.documents[index].data["name"],
+                                              uid: snapshot.data
+                                                  .documents[index].data["uid"],
+                                              id: snapshot.data.documents[index]
+                                                  .data['Id'],
+                                              age: snapshot.data
+                                                  .documents[index].data['age'],
+                                              bio: snapshot.data
+                                                  .documents[index].data['bio'],
+                                              callrate: snapshot
+                                                  .data
+                                                  .documents[index]
+                                                  .data['callrate'],
+                                              country: snapshot
+                                                  .data
+                                                  .documents[index]
+                                                  .data['country'],
+                                              onlinetime: snapshot
+                                                  .data
+                                                  .documents[index]
+                                                  .data['onlinetime'],
+                                              profilePhoto: snapshot
+                                                  .data
+                                                  .documents[index]
+                                                  .data['profile_pic'],
+                                            );
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        NxtVideoChat(receiver: rec),
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Color(0xFFF0F0F0),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                      height: constraint
+                                                              .maxHeight *
+                                                          .75, //size.height * .23,
+                                                      width: double.infinity,
+                                                      child: ClipRRect(
+                                                        borderRadius: BorderRadius.circular(10),
+                                                        child: Image.network(
+                                                          snapshot.data.documents[index].data['profile_pic'] == null
+                                                              ? "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                                                              : snapshot.data.documents[index].data['profile_pic'],
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin: EdgeInsets.all(
+                                                          constraint.maxHeight *
+                                                              .025),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: <Widget>[
+                                                          Container(
+                                                            //color: Colors.red,
+                                                            width: constraint
+                                                                    .maxWidth *
+                                                                .6,
+                                                            child: Text(
+                                                              "${rec.name}",
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                color: Color(
+                                                                    0xFF383838),
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            "${rec.age}",
+                                                            style: TextStyle(
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          constraint.maxHeight *
+                                                              .00,
+                                                    ),
+                                                    Container(
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            "${rec.country}",
+                                                          ),
+                                                          Text(
+                                                            "Online",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .redAccent),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    }
+                                  }),
+                            ],
                           ),
+                          //here
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          left: size.width * .04,
-                          right: size.width * .02,
-                        ),
-                        width: size.width * .3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: Color(0xFFE6EAEB),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Indian",
-                            style: TextStyle(
-                              color: Color(0xFF808080),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          left: size.width * .04,
-                          right: size.width * .02,
-                        ),
-                        width: size.width * .3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: Color(0xFFE6EAEB),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "All",
-                            style: TextStyle(
-                              color: Color(0xFF808080),
-                            ),
-                          ),
-                        ),
-                      ),
+                      )
                     ],
                   ),
-                ),
-                Expanded(
-                  child: Padding(
+                  // For Ranadom TabBar
+                  Padding(
                     padding: EdgeInsets.only(
                       left: size.width * .05,
                       right: size.width * .05,
@@ -221,19 +435,11 @@ class _VideoChatState extends State<VideoChat> {
                     ),
                     child: Stack(
                       children: <Widget>[
-                        Container(
-                            child: _isloading
-                                ? Center(
-                                    child: CircularProgressIndicator(),
-                                  )
-                                : Container(
-                                    height: 0.0,
-                                    width: 0.0,
-                                  )),
                         StreamBuilder<QuerySnapshot>(
                             stream: Firestore.instance
                                 .collection("USER")
-                                .where('gender', isEqualTo: userProvid.getUser.gender)
+                                .where('gender',
+                                    isEqualTo: userProvid.getGender)
                                 .snapshots(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -301,9 +507,7 @@ class _VideoChatState extends State<VideoChat> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  NxtVideoChat(
-                                                      receiver: rec,
-                                                      user: userProvid.getUser),
+                                                  NxtVideoChat(receiver: rec),
                                             ),
                                           );
                                         },
@@ -329,18 +533,7 @@ class _VideoChatState extends State<VideoChat> {
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                   child: Image.network(
-                                                    snapshot
-                                                                    .data
-                                                                    .documents[
-                                                                        index]
-                                                                    .data[
-                                                                'profile_pic'] ==
-                                                            null
-                                                        ? "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                                                        : snapshot
-                                                            .data
-                                                            .documents[index]
-                                                            .data['profile_pic'],
+                                                    "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
@@ -394,7 +587,7 @@ class _VideoChatState extends State<VideoChat> {
                                                           .spaceEvenly,
                                                   children: <Widget>[
                                                     Text(
-                                                    "${rec.country}",
+                                                      "${rec.country}",
                                                     ),
                                                     Text(
                                                       "Online",
@@ -414,365 +607,217 @@ class _VideoChatState extends State<VideoChat> {
                                 );
                               }
                             }),
+                        Container(
+                          child: _isloading
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : Container(
+                                  height: 0,
+                                  width: 0,
+                                ),
+                        )
                       ],
                     ),
                     //here
                   ),
-                )
-              ],
-            ),
-            // For Ranadom TabBar
-            Padding(
-              padding: EdgeInsets.only(
-                left: size.width * .05,
-                right: size.width * .05,
-                top: size.height * .03,
-              ),
-              child: Stack(
-                children: <Widget>[
-                  StreamBuilder<QuerySnapshot>(
-                      stream: Firestore.instance
-                          .collection("USER")
-                          .where('gender', isEqualTo:userProvid.getGender)
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasError) {
-                          return new Text('Error: ${snapshot.error}');
-                        }
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text("Loading..."),
-                                SizedBox(
-                                  height: 50.0,
-                                ),
-                                CircularProgressIndicator()
-                              ],
-                            ),
-                          );
-                        } else {
-                          return GridView.builder(
-                            shrinkWrap: true,
-                            //physics: NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: itemHeight / itemWidth,
-                                    crossAxisSpacing: size.width * .05,
-                                    mainAxisSpacing: size.height * .02),
-
-                            itemCount: snapshot.data.documents.length,
-                            itemBuilder: (_, index) => LayoutBuilder(
-                              builder: (ctx, constraint) {
-                                User rec = User(
-                                  name: snapshot
-                                      .data.documents[index].data["name"],
-                                  uid: snapshot
-                                      .data.documents[index].data["uid"],
-                                  id: snapshot.data.documents[index].data['Id'],
-                                  age: snapshot
-                                      .data.documents[index].data['age'],
-                                  bio: snapshot
-                                      .data.documents[index].data['bio'],
-                                  callrate: snapshot
-                                      .data.documents[index].data['callrate'],
-                                  country: snapshot
-                                      .data.documents[index].data['country'],
-                                  onlinetime: snapshot
-                                      .data.documents[index].data['onlinetime'],
-                                  profilePhoto: snapshot.data.documents[index]
-                                      .data['profile_pic'],
-                                );
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            NxtVideoChat(receiver: rec),
+                  // For New tabBar
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: size.width * .05,
+                      right: size.width * .05,
+                      top: size.height * .03,
+                    ),
+                    child: Stack(
+                      children: <Widget>[
+                        StreamBuilder<QuerySnapshot>(
+                            stream: Firestore.instance
+                                .collection("USER")
+                                .where('gender',
+                                    isEqualTo: userProvid.getGender)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return new Text('Error: ${snapshot.error}');
+                              }
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text("Loading..."),
+                                      SizedBox(
+                                        height: 50.0,
                                       ),
-                                    );
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xFFF0F0F0),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
+                                      CircularProgressIndicator()
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return GridView.builder(
+                                  shrinkWrap: true,
+                                  //physics: NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio:
+                                              itemHeight / itemWidth,
+                                          crossAxisSpacing: size.width * .05,
+                                          mainAxisSpacing: size.height * .02),
+
+                                  itemCount: snapshot.data.documents.length,
+                                  itemBuilder: (_, index) => LayoutBuilder(
+                                    builder: (ctx, constraint) {
+                                      User rec = User(
+                                        name: snapshot
+                                            .data.documents[index].data["name"],
+                                        uid: snapshot
+                                            .data.documents[index].data["uid"],
+                                        id: snapshot
+                                            .data.documents[index].data['Id'],
+                                        age: snapshot
+                                            .data.documents[index].data['age'],
+                                        bio: snapshot
+                                            .data.documents[index].data['bio'],
+                                        callrate: snapshot.data.documents[index]
+                                            .data['callrate'],
+                                        country: snapshot.data.documents[index]
+                                            .data['country'],
+                                        onlinetime: snapshot
+                                            .data
+                                            .documents[index]
+                                            .data['onlinetime'],
+                                        profilePhoto: snapshot
+                                            .data
+                                            .documents[index]
+                                            .data['profile_pic'],
+                                      );
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  NxtVideoChat(receiver: rec),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
                                           decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          height: constraint.maxHeight *
-                                              .75, //size.height * .23,
-                                          width: double.infinity,
-                                          child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                            child: Image.network(
-                                              "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                                              fit: BoxFit.cover,
-                                            ),
+                                            color: Color(0xFFF0F0F0),
                                           ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.all(
-                                              constraint.maxHeight * .025),
-                                          child: Row(
+                                          child: Column(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
+                                                MainAxisAlignment.start,
                                             children: <Widget>[
                                               Container(
-                                                //color: Colors.red,
-                                                width: constraint.maxWidth * .6,
-                                                child: Text(
-                                                  "${rec.name}",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    color: Color(0xFF383838),
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w500,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                height: constraint.maxHeight *
+                                                    .75, //size.height * .23,
+                                                width: double.infinity,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Image.network(
+                                                    "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
                                               ),
-                                              Text(
-                                                "${rec.age}",
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500,
+                                              Container(
+                                                margin: EdgeInsets.all(
+                                                    constraint.maxHeight *
+                                                        .025),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      //color: Colors.red,
+                                                      width:
+                                                          constraint.maxWidth *
+                                                              .6,
+                                                      child: Text(
+                                                        "${rec.name}",
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFF383838),
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      "${rec.age}",
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height:
+                                                    constraint.maxHeight * .00,
+                                              ),
+                                              Container(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "${rec.country}",
+                                                    ),
+                                                    Text(
+                                                      "Online",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.redAccent),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        SizedBox(
-                                          height: constraint.maxHeight * .00,
-                                        ),
-                                        Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                              Text(
-                                                "${rec.country}",
-                                              ),
-                                              Text(
-                                                "Online",
-                                                style: TextStyle(
-                                                    color: Colors.redAccent),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      );
+                                    },
                                   ),
                                 );
-                              },
-                            ),
-                          );
-                        }
-                      }),
-                  Container(
-                    child: _isloading
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : Container(
-                            height: 0,
-                            width: 0,
-                          ),
-                  )
-                ],
-              ),
-              //here
-            ),
-            // For New tabBar
-            Padding(
-              padding: EdgeInsets.only(
-                left: size.width * .05,
-                right: size.width * .05,
-                top: size.height * .03,
-              ),
-              child: Stack(
-                children: <Widget>[
-                  StreamBuilder<QuerySnapshot>(
-                      stream: Firestore.instance
-                          .collection("USER")
-                          .where('gender', isEqualTo:userProvid.getGender)
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasError) {
-                          return new Text('Error: ${snapshot.error}');
-                        }
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text("Loading..."),
-                                SizedBox(
-                                  height: 50.0,
+                              }
+                            }),
+                        Container(
+                          child: _isloading
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : Container(
+                                  height: 0,
+                                  width: 0,
                                 ),
-                                CircularProgressIndicator()
-                              ],
-                            ),
-                          );
-                        } else {
-                          return GridView.builder(
-                            shrinkWrap: true,
-                            //physics: NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: itemHeight / itemWidth,
-                                crossAxisSpacing: size.width * .05,
-                                mainAxisSpacing: size.height * .02),
-
-                            itemCount: snapshot.data.documents.length,
-                            itemBuilder: (_, index) => LayoutBuilder(
-                              builder: (ctx, constraint) {
-                                User rec = User(
-                                  name: snapshot
-                                      .data.documents[index].data["name"],
-                                  uid: snapshot
-                                      .data.documents[index].data["uid"],
-                                  id: snapshot.data.documents[index].data['Id'],
-                                  age: snapshot
-                                      .data.documents[index].data['age'],
-                                  bio: snapshot
-                                      .data.documents[index].data['bio'],
-                                  callrate: snapshot
-                                      .data.documents[index].data['callrate'],
-                                  country: snapshot
-                                      .data.documents[index].data['country'],
-                                  onlinetime: snapshot
-                                      .data.documents[index].data['onlinetime'],
-                                  profilePhoto: snapshot.data.documents[index]
-                                      .data['profile_pic'],
-                                );
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            NxtVideoChat(receiver: rec),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xFFF0F0F0),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                              BorderRadius.circular(10)),
-                                          height: constraint.maxHeight *
-                                              .75, //size.height * .23,
-                                          width: double.infinity,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                            BorderRadius.circular(10),
-                                            child: Image.network(
-                                              "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.all(
-                                              constraint.maxHeight * .025),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                              Container(
-                                                //color: Colors.red,
-                                                width: constraint.maxWidth * .6,
-                                                child: Text(
-                                                  "${rec.name}",
-                                                  overflow:
-                                                  TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    color: Color(0xFF383838),
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text(
-                                                "${rec.age}",
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: constraint.maxHeight * .00,
-                                        ),
-                                        Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                              Text(
-                                                "${rec.country}",
-                                              ),
-                                              Text(
-                                                "Online",
-                                                style: TextStyle(
-                                                    color: Colors.redAccent),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        }
-                      }),
-                  Container(
-                    child: _isloading
-                        ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                        : Container(
-                      height: 0,
-                      width: 0,
+                        )
+                      ],
                     ),
-                  )
+                    //here
+                  ),
                 ],
               ),
-              //here
-            ),
-          ],
-        ),
       ),
     );
   }

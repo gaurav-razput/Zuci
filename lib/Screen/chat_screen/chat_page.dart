@@ -1,18 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:zuci/callScreen/pickup/pickup_layout.dart';
 import 'package:zuci/models/message.dart';
 import 'package:zuci/models/user.dart';
+import 'package:zuci/provider/user_provider.dart';
+import 'package:zuci/resources/call_methods.dart';
 import 'package:zuci/resources/firebase_methods.dart';
 import 'package:zuci/utils/call_utilities.dart';
 import 'package:zuci/utils/permissions.dart';
 
 class Chat_page extends StatefulWidget {
-
   final User receiver;
   final sen;
-
-  Chat_page({this.receiver,this.sen});
+  Chat_page({
+    this.receiver,
+    this.sen,
+  });
 
   @override
   _Chat_pageState createState() => _Chat_pageState();
@@ -21,18 +26,22 @@ class Chat_page extends StatefulWidget {
 class _Chat_pageState extends State<Chat_page> {
   bool isWriting = false;
   TextEditingController textFieldController = TextEditingController();
-  User sender;
-  FirebaseMethods firebaseMethods =FirebaseMethods();
+  FirebaseMethods firebaseMethods = FirebaseMethods();
+  CallMethods callMethods = CallMethods();
+  bool validate;
+  UserProvider userProvider;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    sender =User(uid:widget.sen);
-
   }
+
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
+    int min = callMethods.coinBalance(int.parse(userProvider.getUser.coin),
+        int.parse(widget.receiver.callrate));
     return PickupLayout(
       scaffold: Scaffold(
         backgroundColor: Colors.white,
@@ -43,36 +52,40 @@ class _Chat_pageState extends State<Chat_page> {
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child:   IconButton(
+              child: IconButton(
                 icon: Icon(
                   Icons.video_call,
                 ),
                 onPressed: () async =>
-                await Permissions.cameraAndMicrophonePermissionsGranted()
-                    ? CallUtils.dial(
-                  from: sender,
-                  to: widget.receiver,
-                  context: context,
-                )
-
-
-                    : {},
+                    await Permissions.cameraAndMicrophonePermissionsGranted()
+                        ? min > 0
+                            ? CallUtils.dial(
+                                from: userProvider.getUser,
+                                to: widget.receiver,
+                                context: context,
+                              )
+                            : Fluttertoast.showToast(
+                                msg: 'Less Coin to make Call',
+                                timeInSecForIos: 4,
+                                textColor: Colors.white,
+                                backgroundColor: Colors.purpleAccent)
+                        : {},
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child:  IconButton(
+              child: IconButton(
                 icon: Icon(
                   Icons.phone,
                 ),
                 onPressed: () async =>
-                await Permissions.cameraAndMicrophonePermissionsGranted()
-                    ? CallUtils.voice_dail(
-                  from: sender,
-                  to: widget.receiver,
-                  context: context,
-                )
-                    : {},
+                    await Permissions.cameraAndMicrophonePermissionsGranted()
+                        ? CallUtils.voice_dail(
+                            from: userProvider.getUser,
+                            to: widget.receiver,
+                            context: context,
+                          )
+                        : {},
               ),
             )
           ],
@@ -93,7 +106,7 @@ class _Chat_pageState extends State<Chat_page> {
     return StreamBuilder(
       stream: Firestore.instance
           .collection("messages")
-          .document(sender.uid)
+          .document(userProvider.getUser.uid)
           .collection(widget.receiver.uid)
           .orderBy("timestamp", descending: true)
           .snapshots(),
@@ -112,26 +125,28 @@ class _Chat_pageState extends State<Chat_page> {
       },
     );
   }
+
   Widget chatMessageItem(DocumentSnapshot snapshot) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical:3),
+      margin: EdgeInsets.symmetric(vertical: 3),
       child: Container(
-        alignment: snapshot['senderId'] == sender.uid
+        alignment: snapshot['senderId'] == userProvider.getUser.uid
             ? Alignment.centerRight
             : Alignment.centerLeft,
-        child: snapshot['senderId'] == sender.uid
+        child: snapshot['senderId'] == userProvider.getUser.uid
             ? senderLayout(snapshot)
             : receiverLayout(snapshot),
       ),
     );
   }
+
   Widget senderLayout(DocumentSnapshot snapshot) {
     Radius messageRadius = Radius.circular(10);
 
     return Container(
-      margin: EdgeInsets.only(top:1),
+      margin: EdgeInsets.only(top: 1),
       constraints:
-      BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
       decoration: BoxDecoration(
         color: Colors.purpleAccent,
         borderRadius: BorderRadius.only(
@@ -146,6 +161,7 @@ class _Chat_pageState extends State<Chat_page> {
       ),
     );
   }
+
   getMessage(DocumentSnapshot snapshot) {
     return Text(
       snapshot['message'],
@@ -155,13 +171,14 @@ class _Chat_pageState extends State<Chat_page> {
       ),
     );
   }
+
   Widget receiverLayout(DocumentSnapshot snapshot) {
     Radius messageRadius = Radius.circular(10);
 
     return Container(
-      margin: EdgeInsets.only(top:1),
+      margin: EdgeInsets.only(top: 1),
       constraints:
-      BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
       decoration: BoxDecoration(
         color: Colors.pink,
         borderRadius: BorderRadius.only(
@@ -176,14 +193,14 @@ class _Chat_pageState extends State<Chat_page> {
       ),
     );
   }
-  Widget chatControls() {
 
+  Widget chatControls() {
     sendMessage() {
       var text = textFieldController.text;
       textFieldController.clear();
       Message _message = Message(
         receiverId: widget.receiver.uid,
-        senderId: sender.uid,
+        senderId: userProvider.getUser.uid,
         message: text,
         timestamp: Timestamp.now(),
         type: 'text',
@@ -193,9 +210,9 @@ class _Chat_pageState extends State<Chat_page> {
         isWriting = false;
       });
 
-      FirebaseMethods().addMessageToDb(_message, sender, widget.receiver);
+      FirebaseMethods()
+          .addMessageToDb(_message, userProvider.getUser, widget.receiver);
     }
-
 
     setWritingTo(bool val) {
       setState(() {
@@ -237,9 +254,7 @@ class _Chat_pageState extends State<Chat_page> {
                   ),
                 ),
                 Flexible(
-
                   child: ListView(
-
                     children: <Widget>[
                       ModalTile(
                         title: "Media",
@@ -266,7 +281,9 @@ class _Chat_pageState extends State<Chat_page> {
                           title: "Create Poll",
                           subtitle: "Share polls",
                           icon: Icons.poll),
-                      SizedBox(height: 10.0,)
+                      SizedBox(
+                        height: 10.0,
+                      )
                     ],
                   ),
                 ),
@@ -291,7 +308,7 @@ class _Chat_pageState extends State<Chat_page> {
             child: Container(
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                gradient:   LinearGradient(
+                gradient: LinearGradient(
                     colors: [Colors.purpleAccent, Colors.pink],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight),
@@ -324,11 +341,9 @@ class _Chat_pageState extends State<Chat_page> {
                     const Radius.circular(50.0),
                   ),
                   borderSide: BorderSide(color: Colors.black),
-
                 ),
-
                 contentPadding:
-                EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 filled: true,
                 fillColor: Colors.white,
                 suffixIcon: GestureDetector(
@@ -341,34 +356,33 @@ class _Chat_pageState extends State<Chat_page> {
           isWriting
               ? Container()
               : Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(Icons.record_voice_over),
-          ),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Icon(Icons.record_voice_over),
+                ),
           isWriting ? Container() : Icon(Icons.camera_alt),
           isWriting
               ? Container(
-              margin: EdgeInsets.only(left: 10),
-              decoration: BoxDecoration(
-                  gradient:LinearGradient(
-                      colors: [Colors.purpleAccent, Colors.pink],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight),
-                  shape: BoxShape.circle),
-              child: IconButton(
-                icon: Icon(
-                  Icons.send,
-                  size: 15,
-                ),
-                onPressed: () => {
-                  sendMessage(),
-                },
-              ))
+                  margin: EdgeInsets.only(left: 10),
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Colors.purpleAccent, Colors.pink],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight),
+                      shape: BoxShape.circle),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.send,
+                      size: 15,
+                    ),
+                    onPressed: () => {
+                      sendMessage(),
+                    },
+                  ))
               : Container()
         ],
       ),
     );
   }
-
 }
 
 class ModalTile extends StatelessWidget {
@@ -387,7 +401,6 @@ class ModalTile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: ListTile(
-
         leading: Container(
           margin: EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
