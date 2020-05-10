@@ -141,7 +141,7 @@ class _MessagesState extends State<Messages> {
               children: <Widget>[
                 StreamBuilder<QuerySnapshot>(
                     stream: FirebaseMethods().fetchContacts(
-                      userId: userProvider.getUser,
+                      userId: userProvider.getUser.uid,
                     ),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -172,7 +172,7 @@ class _MessagesState extends State<Messages> {
               children: <Widget>[
                 StreamBuilder<QuerySnapshot>(
                     stream: FirebaseMethods().fetchHistory(
-                      userId: userProvider.getUser,
+                      userId: userProvider.getUser.uid,
                     ),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -289,7 +289,7 @@ class ViewLayout extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 2.0),
                           child: LastMessageContainer(
                             stream: FirebaseMethods().fetchLastMessageBetween(
-                              senderId: userProvider.getUser,
+                              senderId: userProvider.getUser.uid,
                               receiverId: contact.uid,
                             ),
                           ),

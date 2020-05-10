@@ -64,7 +64,7 @@ class _CallScreenState extends State<CallScreen> {
       userProvider = Provider.of<UserProvider>(context, listen: false);
 
       callStreamSubscription = callMethods
-          .callStream(uid: userProvider.getUser)
+          .callStream(uid: userProvider.getUser.uid)
           .listen((DocumentSnapshot ds) {
         // defining the logic
         switch (ds.data) {

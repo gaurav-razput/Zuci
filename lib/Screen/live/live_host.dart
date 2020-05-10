@@ -58,7 +58,7 @@ class _HostState extends State<Host> {
       userProvider = Provider.of<UserProvider>(context, listen: false);
 
       liveStreamSubscription = liveMethod
-          .callStream(uid: userProvider.getUser)
+          .callStream(uid: userProvider.getUser.uid)
           .listen((DocumentSnapshot ds) {
         // defining the logic
         switch (ds.data) {

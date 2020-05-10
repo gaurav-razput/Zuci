@@ -33,7 +33,7 @@ class _FavouriteListState extends State<FavouriteList> {
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseMethods().fetchSubscribe(
-            userId: userProvider.getUser,
+            userId: userProvider.getUser.uid,
           ),
           builder: (context, snapshot) {
             if (snapshot.hasData) {

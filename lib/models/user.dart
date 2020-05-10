@@ -102,7 +102,14 @@ class User {
     this.following=mapData['following'];
     this.followers=mapData['followers'];
     this.binded=mapData['binded'];
-    this.coin=mapData['coin'];
+    this.coin=mapData['Coins'];
     this.vip=mapData['vip'];
+    this.gender=mapData['gender'];
+    this.bio=mapData['bio'];
+    this.country=mapData['coumtry'];
+    this.callrate=mapData['callrate'];
+    this.age=mapData['age'];
+    this.onlinetime=mapData['onlinetime'];
+    this.callrate=mapData['callrate'];
   }
 }

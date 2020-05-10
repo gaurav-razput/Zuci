@@ -47,7 +47,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
 
-    user = User(uid: userProvider.getUser);
+    user = User(uid: userProvider.getUser.uid);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(

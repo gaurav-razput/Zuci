@@ -1,19 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:zuci/models/user.dart';
+import 'package:zuci/resources/firebase_methods.dart';
 
 class UserProvider with ChangeNotifier {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  String _user;
+  FirebaseMethods firebaseMethods =FirebaseMethods();
+  User _user;
   String _gender;
-  String get getUser => _user;
+  User get getUser => _user;
   String get getGender => _gender;
 
   void refreshUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    _user = user.uid;
+    User user = await firebaseMethods.getUserDetails();
+    _user = user;
     String gen;
-    var document = await Firestore.instance.collection('USER').document(_user);
+    var document = await Firestore.instance.collection('USER').document(_user.uid);
     document.get().then((document) {
       gen = document['gender'];
     }).whenComplete(() {

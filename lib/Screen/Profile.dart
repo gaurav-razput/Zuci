@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zuci/Screen/Coins.dart';
 import 'package:zuci/Screen/PhoneBind.dart';
 import 'package:zuci/Screen/Settings.dart';
@@ -8,6 +9,7 @@ import 'package:zuci/Screen/Shair.dart';
 import 'package:zuci/Screen/Vip.dart';
 import 'package:zuci/Screen/editProfile.dart';
 import 'package:zuci/Screen/loginPage.dart';
+import 'package:zuci/provider/user_provider.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -17,72 +19,72 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   FirebaseUser user;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  UserProvider userProvider;
+//  Widget _showCircularProgress() {
+//    Size size = MediaQuery.of(context).size;
+//    if (loading) {
+//      return Container(
+//        decoration: BoxDecoration(
+//          color: Colors.black12,
+//          backgroundBlendMode: BlendMode.darken,
+//        ),
+//        child: Center(child: CircularProgressIndicator()),
+//        height: size.height,
+//        width: size.width,
+//      );
+//    }
+//    return Container(
+//      height: 0.0,
+//      width: 0.0,
+//    );
+//  }
 
-  Widget _showCircularProgress() {
-    Size size = MediaQuery.of(context).size;
-    if (loading) {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.black12,
-          backgroundBlendMode: BlendMode.darken,
-        ),
-        child: Center(child: CircularProgressIndicator()),
-        height: size.height,
-        width: size.width,
-      );
-    }
-    return Container(
-      height: 0.0,
-      width: 0.0,
-    );
-  }
+//  String name,
+//      gmail,
+//      id,
+//      bio,
+//      coin,
+//      binded,
+//      followers,
+//      following,
+//      callrate,
+//      phone_no,
+//      uid,
+//      profile,
+//      onlinetime,
+//      age;
+//  bool loading = true;
 
-  String name,
-      gmail,
-      id,
-      bio,
-      coin,
-      binded,
-      followers,
-      following,
-      callrate,
-      phone_no,
-      uid,
-      profile,
-      onlinetime,
-      age;
-  bool loading = true;
-
-  void getuserdata() async {
-    user = await FirebaseAuth.instance.currentUser();
-    var document =
-        await Firestore.instance.collection('USER').document(user.uid);
-    document.get().then((document) {
-      name = document['name'];
-      gmail = document['gmail'];
-      id = document['Id'];
-      coin = document['Coins'];
-      binded = document['Binded'];
-      followers = document['followers'];
-      following = document['following'];
-      callrate = document['callrate'];
-      phone_no = document['phone_no'];
-      age = document['age'];
-      onlinetime = document['onlinetime'];
-      profile = document['profile_pic'];
-      bio = document['bio'];
-    }).whenComplete(() {
-      setState(() {
-        loading = false;
-      });
-    });
-  }
+//  void getuserdata() async {
+//    user = await FirebaseAuth.instance.currentUser();
+//    var document =
+//        await Firestore.instance.collection('USER').document(user.uid);
+//    document.get().then((document) {
+//      name = document['name'];
+//      gmail = document['gmail'];
+//      id = document['Id'];
+//      coin = document['Coins'];
+//      binded = document['Binded'];
+//      followers = document['followers'];
+//      following = document['following'];
+//      callrate = document['callrate'];
+//      phone_no = document['phone_no'];
+//      age = document['age'];
+//      onlinetime = document['onlinetime'];
+//      profile = document['profile_pic'];
+//      bio = document['bio'];
+//    }).whenComplete(() {
+//      setState(() {
+//        loading = false;
+//      });
+//    });
+//  }
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      getuserdata();
+//      getuserdata();
     });
   }
 
@@ -99,7 +101,7 @@ class _ProfileState extends State<Profile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Id:${id}'),
+                    Text('Id:${userProvider.getUser.id}'),
                     MaterialButton(
                       onPressed: () {},
                       height: 30,
@@ -117,7 +119,7 @@ class _ProfileState extends State<Profile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Id:${id}"),
+                    Text("Id:${userProvider.getUser.id}"),
                     MaterialButton(
                       onPressed: () {},
                       height: 30,
@@ -158,14 +160,14 @@ class _ProfileState extends State<Profile> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditProfile(
-                    name: '$name',
-                    age: age,
-                    bio: '$bio',
-                    callrate: callrate,
-                    mobilenumber: phone_no,
-                    uid: user.uid,
-                    onlinetime: onlinetime,
-                    profile_pic: profile,
+                    name: userProvider.getUser.name,
+                    age: userProvider.getUser.age,
+                    bio: userProvider.getUser.bio,
+                    callrate: userProvider.getUser.callrate,
+                    mobilenumber: userProvider.getUser.phone_no,
+                    uid: userProvider.getUser.uid,
+                    onlinetime: userProvider.getUser.onlinetime,
+                    profile_pic:userProvider.getUser.profilePhoto,
                   ),
                 ),
               );
@@ -177,8 +179,8 @@ class _ProfileState extends State<Profile> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => Coins(
-                    coins: coin,
-                    uid: user.uid,
+                    coins:userProvider.getUser.coin,
+                    uid: userProvider.getUser.uid,
                   ),
                 ),
               );
@@ -239,6 +241,8 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
+    userProvider.refreshUser();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
@@ -258,8 +262,8 @@ class _ProfileState extends State<Profile> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Container(child: Text("$followers Followers")),
-                    Container(child: Text("$following Following"))
+                    Container(child: Text("${userProvider.getUser.followers} Followers")),
+                    Container(child: Text("${userProvider.getUser.following} Following"))
                   ],
                 ),
                 options(Icons.edit, "Edit Profile", 1),
@@ -285,29 +289,29 @@ class _ProfileState extends State<Profile> {
                     CircleAvatar(
                       radius: size.height * .07,
                       backgroundColor: Colors.red,
-                      backgroundImage: NetworkImage(profile==null?
+                      backgroundImage: NetworkImage(userProvider.getUser.profilePhoto==null?
                           "https://images.pexels.com/photos/3762775/pexels-photo-3762775.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-                      :profile
+                      :userProvider.getUser.profilePhoto
                       ),
                     ),
                     Container(
                       margin: EdgeInsets.all(4),
                       child: Text(
-                        "$name",
+                        "${userProvider.getUser.name}",
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
                     Container(
                       margin: EdgeInsets.all(4),
                       child: Text(
-                        "Id:$id",
+                        "Id:${userProvider.getUser.id}",
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
                     Container(
                       margin: EdgeInsets.all(4),
                       child: Text(
-                        "⭐ $coin",
+                        "⭐ ${userProvider.getUser.coin}",
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     )
@@ -315,7 +319,6 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-            _showCircularProgress(),
           ],
         ), //Stack
       ), //sinlechildscrollview

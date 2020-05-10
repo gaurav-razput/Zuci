@@ -233,7 +233,7 @@ class _VideoChatState extends State<VideoChat> {
                         StreamBuilder<QuerySnapshot>(
                             stream: Firestore.instance
                                 .collection("USER")
-                                .where('gender', isEqualTo: userProvid.getGender)
+                                .where('gender', isEqualTo: userProvid.getUser.gender)
                                 .snapshots(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
