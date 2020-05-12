@@ -271,21 +271,21 @@ class FirebaseMethods {
   }
 
   Future<void> adddailhistory(of, to) {
-    Map<String, String> info = <String, String>{
-      'time': "${DateTime.now()}",
+    Map<String, dynamic> info = <String, dynamic>{
+      'time': Timestamp.now(),
       'to': to,
       'call':'dial'
     };
     _userCollection
         .document(of)
         .collection(HISTORY_COLLECTION)
-        .document(to)
+        .document()
         .setData(info);
   }
 
   Future<void> addrechistory(of, to) {
-    Map<String, String> info = <String, String>{
-      'time': "${DateTime.now()}",
+    Map< String, dynamic> info = <String, dynamic>{
+      'time': Timestamp.now(),
       'to': of,
       'call':'rec'
     };

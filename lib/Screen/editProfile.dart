@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zuci/provider/user_provider.dart';
 import 'package:zuci/resources/firebase_methods.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -41,6 +43,7 @@ class _EditProfileState extends State<EditProfile> {
   String profile_url;
   final _formKey = new GlobalKey<FormState>();
   FirebaseMethods firebaseMethods = FirebaseMethods();
+  UserProvider userProvider;
   bool validateAndSave() {
     final form = _formKey.currentState;
     if (form.validate()) {
@@ -62,6 +65,11 @@ class _EditProfileState extends State<EditProfile> {
         .document('${widget.uid}')
         .updateData({
       'profile_pic': '$profile_url',
+    }).whenComplete((){
+      setState(() {
+        _isLoading = false;
+        _profile_pic = url;
+      });
     });
   }
 
@@ -75,8 +83,7 @@ class _EditProfileState extends State<EditProfile> {
         await firebaseMethods.uploadImageToStorage(image).whenComplete(() {
         updateProfile(profile_url).whenComplete(() {
         setState(() {
-          _isLoading = false;
-          _profile_pic = profile_url;
+          updateProfile(profile_url);
         });
       });
     });
@@ -84,6 +91,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -104,9 +112,9 @@ class _EditProfileState extends State<EditProfile> {
                       child: CircleAvatar(
                         radius: size.height * .07,
                         backgroundColor: Colors.red,
-                        backgroundImage: NetworkImage(widget.profile_pic == null
+                        backgroundImage: NetworkImage(userProvider.getUser.profilePhoto == null
                             ? "https://images.pexels.com/photos/3762775/pexels-photo-3762775.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-                            : widget.profile_pic),
+                            :userProvider.getUser.profilePhoto),
                       ),
                     ),
                     Center(
@@ -135,7 +143,7 @@ class _EditProfileState extends State<EditProfile> {
                       child: TextFormField(
                         decoration: InputDecoration(
                           labelText: 'Username',
-                          hintText: '${widget.name}',
+                          hintText: '${userProvider.getUser.name}',
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(8.0)),
@@ -147,7 +155,7 @@ class _EditProfileState extends State<EditProfile> {
                             borderSide: BorderSide(color: Colors.black87),
                           ),
                         ),
-                        initialValue: '${widget.name}',
+                        initialValue: '${userProvider.getUser.name}',
                         validator: (value) =>
                             value.isEmpty ? 'Name cann\'t empty' : null,
                         onSaved: (value) => _name = value.trim(),
@@ -163,7 +171,7 @@ class _EditProfileState extends State<EditProfile> {
                       child: TextFormField(
                         decoration: InputDecoration(
                           labelText: 'Age',
-                          hintText: '${widget.age}',
+                          hintText: '${userProvider.getUser.age}',
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(8.0)),
@@ -175,7 +183,7 @@ class _EditProfileState extends State<EditProfile> {
                             borderSide: BorderSide(color: Colors.black87),
                           ),
                         ),
-                        initialValue: '${widget.age}',
+                        initialValue: '${userProvider.getUser.age}',
                         validator: (value) =>
                             value.isEmpty ? 'Age cann\'t empty' : null,
                         onSaved: (value) => _age = value.trim(),
@@ -203,7 +211,7 @@ class _EditProfileState extends State<EditProfile> {
                             borderSide: BorderSide(color: Colors.black87),
                           ),
                         ),
-                        initialValue: widget.bio,
+                        initialValue: userProvider.getUser.age,
                         validator: (value) =>
                             value.isEmpty ? 'Bio cann\'t empty' : null,
                         onSaved: (value) => _bio = value.trim(),
@@ -217,7 +225,7 @@ class _EditProfileState extends State<EditProfile> {
                         bottom: size.height * .01,
                       ),
                       child: TextFormField(
-                        initialValue: widget.mobilenumber,
+                        initialValue: userProvider.getUser.phone_no,
                         decoration: InputDecoration(
                           labelText: 'Mobile Number',
                           hintText: 'Current mobile number',
@@ -245,7 +253,7 @@ class _EditProfileState extends State<EditProfile> {
                         bottom: size.height * .01,
                       ),
                       child: TextFormField(
-                        initialValue: widget.onlinetime,
+                        initialValue: userProvider.getUser.onlinetime,
                         decoration: InputDecoration(
                           labelText: 'Online Time',
                           hintText: '${widget.onlinetime}',
@@ -273,7 +281,7 @@ class _EditProfileState extends State<EditProfile> {
                         bottom: size.height * .01,
                       ),
                       child: TextFormField(
-                        initialValue: widget.callrate,
+                        initialValue: userProvider.getUser.callrate,
                         decoration: InputDecoration(
                           labelText: 'Call Rate/Min',
                           hintText: '${widget.callrate}',
@@ -301,7 +309,7 @@ class _EditProfileState extends State<EditProfile> {
                         bottom: size.height * .01,
                       ),
                       child: TextFormField(
-                        initialValue: widget.country,
+                        initialValue:userProvider.getUser.country,
                         decoration: InputDecoration(
                           labelText: 'Country',
                           hintText: '${widget.country}',

@@ -1,29 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:zuci/Screen/chat_screen/chat_page.dart';
+import 'package:zuci/constants/strings.dart';
 import 'package:zuci/models/user.dart';
 import 'package:zuci/provider/user_provider.dart';
+import 'package:zuci/resources/call_methods.dart';
 import 'package:zuci/resources/firebase_methods.dart';
 import 'package:zuci/utils/call_utilities.dart';
 import 'package:zuci/utils/permissions.dart';
 
 class NxtVideoChat extends StatefulWidget {
+  @required
   final User receiver;
-  NxtVideoChat({this.receiver,});
+  @required
+  final User sender;
+  NxtVideoChat({this.receiver, this.sender});
 
   @override
   _NxtVideoChatState createState() => _NxtVideoChatState();
 }
 
 class _NxtVideoChatState extends State<NxtVideoChat> {
-  User user;
   FirebaseMethods firebaseMethods = FirebaseMethods();
-  bool loading=true;
+  CallMethods callMethods = CallMethods();
+  bool loading = true;
   bool _issubscribe;
   Future<void> check_subscription() async {
     _issubscribe = await firebaseMethods.issubscribe(
-        user.uid, widget.receiver.uid);
-    print(_issubscribe);
+        widget.sender.uid, widget.receiver.uid);
   }
 
   @override
@@ -32,7 +38,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
     super.initState();
     check_subscription().whenComplete(() {
       setState(() {
-        loading =false;
+        loading = false;
       });
     });
   }
@@ -40,9 +46,10 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
-
-    user = User(uid: userProvider.getUser.uid);
     Size size = MediaQuery.of(context).size;
+    int min = callMethods.coinBalance(int.parse(userProvider.getUser.coin),
+        int.parse(widget.receiver.callrate));
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -60,11 +67,9 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                         ),
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(
-                              userProvider.getUser.profilePhoto == null
-                                  ? "https://images.pexels.com/photos/3762775/pexels-photo-3762775.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-                                  : userProvider.getUser.profilePhoto
-                          ),
+                          image: widget.receiver.profilePhoto == null
+                              ? AssetImage('assets/Image/person.png')
+                              : NetworkImage(widget.receiver.profilePhoto),
                         ),
                       ),
                       child: Container(
@@ -104,7 +109,8 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                               children: <Widget>[
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: <Widget>[
                                     Container(
                                       width: constraint.maxWidth * .5,
@@ -124,11 +130,12 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                 ),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: <Widget>[
                                     Container(
-                                      margin:
-                                          EdgeInsets.all(constraint.maxWidth * .02),
+                                      margin: EdgeInsets.all(
+                                          constraint.maxWidth * .02),
                                       child: Text(
                                         "${widget.receiver.country}",
                                         style: TextStyle(
@@ -136,8 +143,8 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                       ),
                                     ),
                                     Container(
-                                      margin:
-                                          EdgeInsets.all(constraint.maxWidth * .02),
+                                      margin: EdgeInsets.all(
+                                          constraint.maxWidth * .02),
                                       child: Text(
                                         "Zuci ID:${widget.receiver.id}",
                                         style: TextStyle(
@@ -161,17 +168,29 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-//                  buttons(Icons.add_circle, "Follow", null),
                       LayoutBuilder(
                         builder: (ctx, constraint) {
                           return GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               if (_issubscribe) {
+                                print(userProvider.getUser.uid);
+                                await Firestore.instance
+                                    .collection(USERS_COLLECTION)
+                                    .document(userProvider.getUser.uid)
+                                    .collection(SUBSCRIPTION_COLLECTION)
+                                    .document(widget.receiver.uid)
+                                    .delete()
+                                    .whenComplete(() {
+                                  setState(() {
+                                    _issubscribe = false;
+                                  });
+                                });
                               } else {
                                 firebaseMethods.addsubscription(
-                                    userProvider.getUser, widget.receiver.uid);
+                                    userProvider.getUser.uid,
+                                    widget.receiver.uid);
                                 setState(() {
-                                  _issubscribe=true;
+                                  _issubscribe = true;
                                 });
                               }
                             },
@@ -181,11 +200,15 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    Icon(_issubscribe ? Icons.remove:Icons.add),
+                                    Icon(_issubscribe
+                                        ? Icons.remove
+                                        : Icons.add),
                                     Padding(
                                       padding: EdgeInsets.only(left: 5),
                                       child: Text(
-                                        _issubscribe ? 'Unsubscribe' : 'Subscribe',
+                                        _issubscribe
+                                            ? 'Unsubscribe'
+                                            : 'Subscribe',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),
@@ -202,7 +225,10 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
                                   stops: [0.2, 1],
-                                  colors: [Color(0xFFB44EB1), Color(0xFFDA4D91)],
+                                  colors: [
+                                    Color(0xFFB44EB1),
+                                    Color(0xFFDA4D91)
+                                  ],
                                 ),
                               ),
                             ),
@@ -215,7 +241,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                             onTap: () async => await Permissions
                                     .cameraAndMicrophonePermissionsGranted()
                                 ? CallUtils.voice_dail(
-                                    from: user,
+                                    from: userProvider.getUser,
                                     to: widget.receiver,
                                     context: context,
                                   )
@@ -247,7 +273,10 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
                                   stops: [0.2, 1],
-                                  colors: [Color(0xFFB44EB1), Color(0xFFDA4D91)],
+                                  colors: [
+                                    Color(0xFFB44EB1),
+                                    Color(0xFFDA4D91)
+                                  ],
                                 ),
                               ),
                             ),
@@ -263,7 +292,7 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                   MaterialPageRoute(
                                       builder: (context) => Chat_page(
                                             receiver: widget.receiver,
-                                            sen: user.uid,
+                                            sen: userProvider.getUser,
                                           )));
                             },
                             child: Container(
@@ -293,7 +322,10 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
                                   stops: [0.2, 1],
-                                  colors: [Color(0xFFB44EB1), Color(0xFFDA4D91)],
+                                  colors: [
+                                    Color(0xFFB44EB1),
+                                    Color(0xFFDA4D91)
+                                  ],
                                 ),
                               ),
                             ),
@@ -316,8 +348,8 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                       Container(
                         child: Text(
                           "Profile",
-                          style:
-                              TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                       Divider(),
@@ -328,15 +360,21 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                       items("Local Time", "01-21-20 15:59:39"),
                       items("Probability", "100%"),
                       items("Grand Total", "994 minutes(s)"),
-                      //Video Call Button
+                      //Video Call Button ------------x----x----xx-------x----------x----------x------------x-----------x------------
                       InkWell(
                         onTap: () async => await Permissions
                                 .cameraAndMicrophonePermissionsGranted()
-                            ? CallUtils.dial(
-                                from: user,
-                                to: widget.receiver,
-                                context: context,
-                              )
+                            ? min > 0
+                                ? CallUtils.dial(
+                                    from: userProvider.getUser,
+                                    to: widget.receiver,
+                                    context: context,
+                                  )
+                                : Fluttertoast.showToast(
+                                    msg: 'Less Coin to make Call',
+                                    timeInSecForIos: 4,
+                                    textColor: Colors.white,
+                                    backgroundColor: Colors.purpleAccent)
                             : {},
                         child: Container(
                           margin: EdgeInsets.only(top: size.height * .025),
@@ -350,7 +388,8 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
                                   color: Colors.white,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(left: size.width * .05),
+                                  padding:
+                                      EdgeInsets.only(left: size.width * .05),
                                   child: Text(
                                     'Video Call Now',
                                     style: TextStyle(color: Colors.white),
@@ -380,62 +419,12 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
             ),
           ),
           Center(
-            child: loading?CircularProgressIndicator():Container(),
+            child: loading ? CircularProgressIndicator() : Container(),
           )
         ],
       ),
     );
   }
-
-//Button widget
-//  Widget buttons(img, txt, Function() onpressed) {
-//    return LayoutBuilder(
-//      builder: (ctx, constraint) {
-//        return Container(
-//          padding: EdgeInsets.all(8),
-//          child: Center(
-//            child: Row(
-//              mainAxisAlignment: MainAxisAlignment.center,
-//              children: <Widget>[
-//                IconButton(
-//                  icon: img,
-//                  onPressed: () async =>
-//                      await Permissions.cameraAndMicrophonePermissionsGranted()
-//                          ? CallUtils.dial(
-//                              from: user,
-//                              to: widget.receiver,
-//                              context: context,
-//                            )
-//                          : {},
-//                  color: Colors.white,
-//                ),
-//                Padding(
-//                  padding: EdgeInsets.only(left: 5),
-//                  child: Text(
-//                    txt,
-//                    style: TextStyle(color: Colors.white),
-//                  ),
-//                ),
-//              ],
-//            ),
-//          ),
-//          decoration: BoxDecoration(
-//            borderRadius: BorderRadius.circular(20.0),
-//            border: Border.all(
-//              color: Colors.white10,
-//            ),
-//            // color: Colors.black26,
-//            gradient: LinearGradient(
-//              begin: Alignment.topCenter,
-//              end: Alignment.bottomCenter,
-//              stops: [0.2, 1],
-//              colors: [Color(0xFFB44EB1), Color(0xFFDA4D91)],
-//            ),
-//          ),
-//        );
-//      },
-//    );
-//  }
 
   //profile and details widgets
   Widget items(ques, ans) {

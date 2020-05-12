@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zuci/Screen/callScreen.dart';
 import 'package:zuci/callScreen/pickup/audio_call.dart';
 import 'package:zuci/models/call.dart';
+import 'package:zuci/provider/user_provider.dart';
 import 'package:zuci/resources/call_methods.dart';
 import 'package:zuci/utils/permissions.dart';
 
@@ -15,6 +17,7 @@ class PickupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
@@ -59,15 +62,17 @@ class PickupScreen extends StatelessWidget {
                   color: Colors.green,
                   onPressed: () async =>
                       await Permissions.cameraAndMicrophonePermissionsGranted()
-                          ? call.isvoicecall?Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => audio_call_screen(call: call),
-                        ),
-                      ):Navigator.push(
+                          ?
+//                      call.isvoicecall?Navigator.push(
+//                        context,
+//                        MaterialPageRoute(
+//                          builder: (context) => audio_call_screen(call: call),
+//                        ),
+//                      ):
+                      Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CallScreen(call: call),
+                                builder: (context) => CallScreen(call: call,from:userProvider.getUser,),
                               ),
                             )
                           : {},

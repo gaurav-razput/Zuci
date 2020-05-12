@@ -1,17 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zuci/Screen/live/live_audience.dart';
 
 import 'package:zuci/Screen/video_chat2.dart';
+import 'package:zuci/constants/strings.dart';
 import 'package:zuci/models/user.dart';
 import 'package:zuci/provider/user_provider.dart';
 import 'package:zuci/resources/firebase_methods.dart';
 
 class VideoChat extends StatefulWidget {
-  final gender;
-  VideoChat({
-    this.gender,
-  });
   @override
   _VideoChatState createState() => _VideoChatState();
 }
@@ -224,10 +222,10 @@ class _VideoChatState extends State<VideoChat> {
                             children: <Widget>[
                               Container(
                                   child: _isloading
-                                      ?Center(
+                                      ? Center(
                                           child: CircularProgressIndicator(),
                                         )
-                                      :Container(
+                                      : Container(
                                           height: 0.0,
                                           width: 0.0,
                                         )),
@@ -280,7 +278,10 @@ class _VideoChatState extends State<VideoChat> {
                                             LayoutBuilder(
                                           builder: (ctx, constraint) {
                                             User rec = User(
-                                              name: snapshot.data.documents[index].data["name"],
+                                              name: snapshot
+                                                  .data
+                                                  .documents[index]
+                                                  .data["name"],
                                               uid: snapshot.data
                                                   .documents[index].data["uid"],
                                               id: snapshot.data.documents[index]
@@ -312,7 +313,11 @@ class _VideoChatState extends State<VideoChat> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        NxtVideoChat(receiver: rec),
+                                                        NxtVideoChat(
+                                                      receiver: rec,
+                                                      sender:
+                                                          userProvid.getUser,
+                                                    ),
                                                   ),
                                                 );
                                               },
@@ -337,13 +342,21 @@ class _VideoChatState extends State<VideoChat> {
                                                           .75, //size.height * .23,
                                                       width: double.infinity,
                                                       child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(10),
-                                                        child: Image.network(
-                                                          snapshot.data.documents[index].data['profile_pic'] == null
-                                                              ? "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                                                              : snapshot.data.documents[index].data['profile_pic'],
-                                                          fit: BoxFit.cover,
-                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        child: rec.profilePhoto ==
+                                                                null
+                                                            ? Image(
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                image: AssetImage(
+                                                                    'assets/Image/person.png'))
+                                                            : Image.network(
+                                                                rec.profilePhoto,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
                                                       ),
                                                     ),
                                                     Container(
@@ -437,7 +450,7 @@ class _VideoChatState extends State<VideoChat> {
                       children: <Widget>[
                         StreamBuilder<QuerySnapshot>(
                             stream: Firestore.instance
-                                .collection("USER")
+                                .collection(LIVE_COLLECTION)
                                 .where('gender',
                                     isEqualTo: userProvid.getGender)
                                 .snapshots(),
@@ -477,38 +490,26 @@ class _VideoChatState extends State<VideoChat> {
                                   itemCount: snapshot.data.documents.length,
                                   itemBuilder: (_, index) => LayoutBuilder(
                                     builder: (ctx, constraint) {
-                                      User rec = User(
-                                        name: snapshot
-                                            .data.documents[index].data["name"],
+                                      User live = User(
+                                        name: snapshot.data.documents[index]
+                                            .data["token"],
                                         uid: snapshot
                                             .data.documents[index].data["uid"],
-                                        id: snapshot
-                                            .data.documents[index].data['Id'],
-                                        age: snapshot
-                                            .data.documents[index].data['age'],
                                         bio: snapshot
-                                            .data.documents[index].data['bio'],
-                                        callrate: snapshot.data.documents[index]
-                                            .data['callrate'],
+                                            .data.documents[index].data["name"],
+                                        age: snapshot
+                                            .data.documents[index].data["age"],
                                         country: snapshot.data.documents[index]
-                                            .data['country'],
-                                        onlinetime: snapshot
-                                            .data
-                                            .documents[index]
-                                            .data['onlinetime'],
-                                        profilePhoto: snapshot
-                                            .data
-                                            .documents[index]
-                                            .data['profile_pic'],
+                                            .data["country"],
                                       );
                                       return GestureDetector(
                                         onTap: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  NxtVideoChat(receiver: rec),
-                                            ),
+                                                builder: (context) => Audience(
+                                                      token: live.name,
+                                                    )),
                                           );
                                         },
                                         child: Container(
@@ -529,14 +530,15 @@ class _VideoChatState extends State<VideoChat> {
                                                 height: constraint.maxHeight *
                                                     .75, //size.height * .23,
                                                 width: double.infinity,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  child: Image.network(
-                                                    "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
+                                                child: live.profilePhoto == null
+                                                    ? Image(
+                                                        fit: BoxFit.cover,
+                                                        image: AssetImage(
+                                                            'assets/Image/person.png'))
+                                                    : Image.network(
+                                                        live.profilePhoto,
+                                                        fit: BoxFit.cover,
+                                                      ),
                                               ),
                                               Container(
                                                 margin: EdgeInsets.all(
@@ -553,7 +555,7 @@ class _VideoChatState extends State<VideoChat> {
                                                           constraint.maxWidth *
                                                               .6,
                                                       child: Text(
-                                                        "${rec.name}",
+                                                        "${live.bio}",
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(
@@ -566,7 +568,7 @@ class _VideoChatState extends State<VideoChat> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${rec.age}",
+                                                      "${live.age}",
                                                       style: TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
@@ -587,7 +589,7 @@ class _VideoChatState extends State<VideoChat> {
                                                           .spaceEvenly,
                                                   children: <Widget>[
                                                     Text(
-                                                      "${rec.country}",
+                                                      "${live.country}",
                                                     ),
                                                     Text(
                                                       "Online",
@@ -649,7 +651,7 @@ class _VideoChatState extends State<VideoChat> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: <Widget>[
-                                      Text("Loading..."),
+                                      Text("Loading...."),
                                       SizedBox(
                                         height: 50.0,
                                       ),
@@ -702,7 +704,10 @@ class _VideoChatState extends State<VideoChat> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  NxtVideoChat(receiver: rec),
+                                                  NxtVideoChat(
+                                                receiver: rec,
+                                                sender: userProvid.getUser,
+                                              ),
                                             ),
                                           );
                                         },
@@ -727,10 +732,16 @@ class _VideoChatState extends State<VideoChat> {
                                                 child: ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
-                                                  child: Image.network(
-                                                    "https://images.pexels.com/photos/1937394/pexels-photo-1937394.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                                  child: rec.profilePhoto ==
+                                                          null
+                                                      ? Image(
+                                                          fit: BoxFit.cover,
+                                                          image: AssetImage(
+                                                              'assets/Image/person.png'))
+                                                      : Image.network(
+                                                          rec.profilePhoto,
+                                                          fit: BoxFit.cover,
+                                                        ),
                                                 ),
                                               ),
                                               Container(

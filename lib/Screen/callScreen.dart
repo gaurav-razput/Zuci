@@ -15,11 +15,9 @@ import 'package:zuci/resources/firebase_methods.dart';
 class CallScreen extends StatefulWidget {
   final Call call;
   final User from;
-  final User to;
   CallScreen({
     @required this.call,
     @required this.from,
-    @required this.to,
   });
   @override
   _CallScreenState createState() => _CallScreenState();
@@ -48,6 +46,7 @@ class _CallScreenState extends State<CallScreen> {
     userjoin=false;
     addPostFrameCallback();
     initializeAgora();
+    _sec = (int.parse(widget.from.coin)/int.parse(widget.call.callRate)).round()*60;
   }
 
   Future<void> initializeAgora() async {
@@ -118,7 +117,7 @@ class _CallScreenState extends State<CallScreen> {
     };
 
     AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
-      startTimer();
+//      startTimer();
       before=DateTime.now();
       setState(() {
         final info = 'onUserJoined: $uid';
@@ -143,8 +142,9 @@ class _CallScreenState extends State<CallScreen> {
 
     AgoraRtcEngine.onUserOffline = (int a, int b) {
       callMethods.endCall(call: widget.call);
+      _timer.cancel();
       after = DateTime.now();
-      minusCoins(widget.to.callrate, widget.from.uid);
+      minusCoins(widget.call.callRate, widget.from.uid);
 
       setState(() {
         final info = 'onUserOffline: a: ${a.toString()}, b: ${b.toString()}';
@@ -336,23 +336,24 @@ class _CallScreenState extends State<CallScreen> {
 
   int _sec ;
 
-  void startTimer() {
-    DateTime before = DateTime.now();
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-          (Timer timer) => setState(
-            () {
-          if (_sec < 1) {
-            callMethods.endCall(call: widget.call);
-            timer.cancel();
-          } else {
-            _sec = _sec - 1;
-          }
-        },
-      ),
-    );
-  }
+//  void startTimer() {
+//    DateTime before = DateTime.now();
+//    const oneSec = const Duration(seconds: 1);
+//    _timer = new Timer.periodic(
+//      oneSec,
+//          (Timer timer) => setState(
+//            () {
+//          if (_sec < 1) {
+//            callMethods.endCall(call: widget.call);
+//            timer.cancel();
+//          } else {
+//            print(_sec);
+//            _sec = _sec - 1;
+//          }
+//        },
+//      ),
+//    );
+//  }
   void minusCoins(callrate,uid) async {
     int coinTominus=before.difference(after).inMinutes*callrate;
     String coin;
@@ -367,7 +368,6 @@ class _CallScreenState extends State<CallScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    _sec = (int.parse(widget.from.coin)/int.parse(widget.to.coin)).round()*60;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(

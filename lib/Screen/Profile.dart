@@ -99,7 +99,7 @@ class _ProfileState extends State<Profile> {
                     mobilenumber: userProvider.getUser.phone_no,
                     uid: userProvider.getUser.uid,
                     onlinetime: userProvider.getUser.onlinetime,
-                    profile_pic:userProvider.getUser.profilePhoto,
+                    profile_pic: userProvider.getUser.profilePhoto,
                   ),
                 ),
               );
@@ -111,7 +111,7 @@ class _ProfileState extends State<Profile> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => Coins(
-                    coins:userProvider.getUser.coin,
+                    coins: userProvider.getUser.coin,
                     uid: userProvider.getUser.uid,
                   ),
                 ),
@@ -194,8 +194,12 @@ class _ProfileState extends State<Profile> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Container(child: Text("${userProvider.getUser.followers} Followers")),
-                    Container(child: Text("${userProvider.getUser.following} Following"))
+                    Container(
+                        child: Text(
+                            "${userProvider.getUser.followers} Followers")),
+                    Container(
+                        child:
+                            Text("${userProvider.getUser.following} Following"))
                   ],
                 ),
                 options(Icons.edit, "Edit Profile", 1),
@@ -221,10 +225,9 @@ class _ProfileState extends State<Profile> {
                     CircleAvatar(
                       radius: size.height * .07,
                       backgroundColor: Colors.red,
-                      backgroundImage: NetworkImage(userProvider.getUser.profilePhoto==null?
-                          "https://images.pexels.com/photos/3762775/pexels-photo-3762775.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-                      :userProvider.getUser.profilePhoto
-                      ),
+                      backgroundImage: userProvider.getUser.profilePhoto == null
+                          ? AssetImage('assets/Image/person.png')
+                          : NetworkImage(userProvider.getUser.profilePhoto),
                     ),
                     Container(
                       margin: EdgeInsets.all(4),

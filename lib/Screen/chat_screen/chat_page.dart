@@ -13,7 +13,7 @@ import 'package:zuci/utils/permissions.dart';
 
 class Chat_page extends StatefulWidget {
   final User receiver;
-  final sen;
+  final User sen;
   Chat_page({
     this.receiver,
     this.sen,
@@ -33,15 +33,13 @@ class _Chat_pageState extends State<Chat_page> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     userProvider = Provider.of<UserProvider>(context);
-    int min = callMethods.coinBalance(int.parse(userProvider.getUser.coin),
-        int.parse(widget.receiver.callrate));
+    int min = callMethods.coinBalance(int.parse(userProvider.getUser.coin),int.parse(widget.receiver.callrate));
     return PickupLayout(
       scaffold: Scaffold(
         backgroundColor: Colors.white,

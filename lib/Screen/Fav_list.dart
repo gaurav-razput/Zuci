@@ -112,6 +112,7 @@ class _Custom_tileState extends State<Custom_tile> {
       following,
       vip,
       phone_no,
+  photo_url,
       uid;
   bool loading = true;
   void getuserdata() async {
@@ -120,6 +121,7 @@ class _Custom_tileState extends State<Custom_tile> {
     document.get().then((document) {
       name = document['name'];
       id = document['Id'];
+      photo_url=document['profile_pic'];
     }).whenComplete(() {
       setState(() {
         loading = false;
@@ -137,55 +139,58 @@ class _Custom_tileState extends State<Custom_tile> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(right: 6),
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(
-                      "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            "$name",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16),
-                          ),
-                          Icon(Icons.favorite, color: Color(0xFFD34B96)),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 2.0),
-                        child: Text(
-                          "$id",
-                          style: TextStyle(
-                              color: Colors.black45,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      )
-                    ],
+    return Card(
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(right: 6),
+                  child:CircleAvatar(
+                    radius: 30,
+                    backgroundImage: photo_url==null?
+                    AssetImage('assets/Image/person.png')
+                        :NetworkImage(photo_url),
                   ),
                 ),
-              )
-            ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              "$name",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 16),
+                            ),
+                            Icon(Icons.favorite, color: Color(0xFFD34B96)),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Text(
+                            "$id",
+                            style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

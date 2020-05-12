@@ -65,7 +65,7 @@ class _RegisterWithGoogleState extends State<RegisterWithGoogle> {
         'uid': uid,
         'age':_age,
         'bio':'',
-        'callrate':'',
+        'callrate':'10',
         'country':_country,
         'profile_pic':'${widget.profile}'
       };
@@ -312,7 +312,6 @@ class _RegisterWithGoogleState extends State<RegisterWithGoogle> {
                                 bottom: size.height * .01,
                               ),
                               child: TextFormField(
-                                keyboardType:TextInputType.numberWithOptions(),
                                 decoration: InputDecoration(
                                   labelText: 'Country',
                                   prefixIcon: Icon(

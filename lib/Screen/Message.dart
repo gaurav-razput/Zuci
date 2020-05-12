@@ -29,17 +29,11 @@ class _MessagesState extends State<Messages> {
         loading = false;
       });
     });
-
     user_uid = user.uid;
     userinfo = User(uid: user.uid);
   }
 
   String token;
-//  Future<void> golive_methodcall() async {
-//    token=await liveMethod.GoLiveMethod(user_uid, 'name').whenComplete((){
-//      Navigator.push(context, MaterialPageRoute(builder: (context)=>Host(token:token,uid: user_uid,)));
-//    });
-//  }
   @override
   void initState() {
     super.initState();
@@ -73,14 +67,19 @@ class _MessagesState extends State<Messages> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-//        floatingActionButton: FloatingActionButton(
-//          child: Text('Live'),
-//          backgroundColor: Colors.pinkAccent,
-//          onPressed: () async =>await Permissions.cameraAndMicrophonePermissionsGranted()?
-//            golive_methodcall()
-//          :{},
-//        ),
-//        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            print('in message inside float pass uid to host ${userProvider.getUser.uid}');
+            token = await liveMethod.GoLiveMethod(
+                    userProvider.getUser.uid,
+                    userProvider.getUser.gender,
+                    userProvider.getUser.name,
+                    userProvider.getUser.age,
+                    userProvider.getUser.country,context);
+
+          },
+          child: Icon(Icons.video_call),
+        ),
         appBar: PreferredSize(
           child: Container(
             decoration: BoxDecoration(
@@ -156,12 +155,10 @@ class _MessagesState extends State<Messages> {
                           itemBuilder: (context, index) {
                             Contact contact =
                                 Contact.fromMap(docList[index].data);
-
                             return ContactView(contact);
                           },
                         );
                       }
-
                       return Center(child: CircularProgressIndicator());
                     }),
                 _showCircularProgress(),
@@ -188,6 +185,10 @@ class _MessagesState extends State<Messages> {
                             return history(
                               uid: docList[index].data['to'],
                               call: docList[index].data['call'],
+                              time: DateTime.fromMicrosecondsSinceEpoch(
+                                  docList[index]
+                                      .data['time']
+                                      .microsecondsSinceEpoch),
                             );
                           },
                         );
@@ -234,74 +235,71 @@ class ViewLayout extends StatelessWidget {
   ViewLayout({
     @required this.contact,
   });
-
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
-
-    return InkWell(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Chat_page(
-            receiver: contact,
-            sen: userProvider.getUser,
-          ),
-        ),
-      ),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(right: 6),
-                  child: CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(
-                        "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              (contact != null ? contact.name : null) != null
-                                  ? contact.name
-                                  : "..",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 19),
-                            ),
-                            Text(
-                              "11:23 AM",
-                              style: TextStyle(color: Colors.black45),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2.0),
-                          child: LastMessageContainer(
-                            stream: FirebaseMethods().fetchLastMessageBetween(
-                              senderId: userProvider.getUser.uid,
-                              receiverId: contact.uid,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    return Card(
+      child: InkWell(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Chat_page(
+              receiver: contact,
+              sen: userProvider.getUser,
             ),
           ),
-        ],
+        ),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(right: 6),
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: contact.profilePhoto == null
+                          ? AssetImage('assets/Image/person.png')
+                          : NetworkImage(contact.profilePhoto),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                (contact != null ? contact.name : null) != null
+                                    ? contact.name
+                                    : "..",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 19),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2.0),
+                            child: LastMessageContainer(
+                              stream: FirebaseMethods().fetchLastMessageBetween(
+                                senderId: userProvider.getUser.uid,
+                                receiverId: contact.uid,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -309,11 +307,9 @@ class ViewLayout extends StatelessWidget {
 
 class LastMessageContainer extends StatelessWidget {
   final stream;
-
   LastMessageContainer({
     @required this.stream,
   });
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -321,7 +317,6 @@ class LastMessageContainer extends StatelessWidget {
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           var docList = snapshot.data.documents;
-
           if (docList.isNotEmpty) {
             Message message = Message.fromMap(docList.last.data);
             return SizedBox(
@@ -337,7 +332,6 @@ class LastMessageContainer extends StatelessWidget {
               ),
             );
           }
-
           return Text(
             "No Message",
             style: TextStyle(
@@ -437,7 +431,8 @@ class QuietBoxHistory extends StatelessWidget {
 class history extends StatefulWidget {
   final uid;
   final call;
-  history({this.uid, this.call});
+  final time;
+  history({this.uid, this.call, this.time});
   @override
   _historyState createState() => _historyState();
 }
@@ -460,7 +455,6 @@ class _historyState extends State<history> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     loading = true;
     getuserdata(widget.uid);
@@ -470,70 +464,78 @@ class _historyState extends State<history> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return loading
-              ? Center(child: CircularProgressIndicator()):Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
+        ? Center(child: CircularProgressIndicator())
+        : Column(
             children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(right: 6),
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(
-                      "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
-                ),
-              ),
-              Expanded(
+              Card(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            '$name',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16),
-                          ),
-                          Text(
-                            "11:23 AM",
-                            style: TextStyle(color: Colors.black45),
-                          ),
-                        ],
+                      Container(
+                        margin: EdgeInsets.only(right: 6),
+                        child: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(
+                              "https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"),
+                        ),
                       ),
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                top: 2.0,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    '$name',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16),
+                                  ),
+                                  Text(
+                                    "${widget.time}".substring(11, 16),
+                                    style: TextStyle(color: Colors.black45),
+                                  ),
+                                ],
                               ),
-                              child: Icon(
-                                Icons.videocam,
-                                color: Color(0xFFD34B96),
-                              )),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 2.0, left: 4.0),
-                            child: Text(
-                               widget.call == 'dial' ? 'Outgoing' : 'Incoming',
-                              style: TextStyle(
-                                  color: Colors.black45,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w600),
-                            ),
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 2.0,
+                                      ),
+                                      child: Icon(
+                                        Icons.videocam,
+                                        color: Color(0xFFD34B96),
+                                      )),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 2.0, left: 4.0),
+                                    child: Text(
+                                      widget.call == 'dial'
+                                          ? 'Outgoing'
+                                          : 'Incoming',
+                                      style: TextStyle(
+                                          color: Colors.black45,
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
             ],
-          ),
-        ),
-      ],
-    );
+          );
   }
 }

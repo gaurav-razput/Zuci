@@ -40,7 +40,7 @@ class CallMethods {
   }
 
   int coinBalance(int amount, int callRate){
-    int min=(amount/callRate).round();
+    int min=(amount/callRate).floor();
     return min;
   }
 //  callCharge(int callRate){

@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'dart:async';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:provider/provider.dart';
 import 'package:zuci/Screen/live/live_method.dart';
 import 'package:zuci/callScreen/configs/agora_configs.dart';
 import 'package:zuci/provider/user_provider.dart';
-import 'package:zuci/resources/firebase_methods.dart';
 
 class Host extends StatefulWidget {
   final token;
@@ -28,6 +26,7 @@ class _HostState extends State<Host> {
   StreamSubscription liveStreamSubscription;
   @override
   void initState() {
+    print('inside initstate host ${widget.uid}');
     super.initState();
     addPostFrameCallback();
     initializeAgora();
@@ -66,7 +65,6 @@ class _HostState extends State<Host> {
           // snapshot is null which means that call is hanged and documents are deleted
             Navigator.pop(context);
             break;
-
           default:
             break;
         }
@@ -123,7 +121,7 @@ class _HostState extends State<Host> {
     };
 
     AgoraRtcEngine.onUserOffline = (int a, int b) {
-      liveMethod.endlive(widget.uid);
+      liveMethod.endLive(widget.uid);
       setState(() {
         final info = 'onUserOffline: a: ${a.toString()}, b: ${b.toString()}';
         _infoStrings.add(info);
@@ -269,7 +267,7 @@ class _HostState extends State<Host> {
             padding: const EdgeInsets.all(12.0),
           ),
           RawMaterialButton(
-            onPressed: () => liveMethod.endlive(widget.uid),
+            onPressed: () => liveMethod.endLive(widget.uid),
             child: Icon(
               Icons.call_end,
               color: Colors.white,

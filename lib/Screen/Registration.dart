@@ -60,6 +60,7 @@ class _RegistrationState extends State<Registration> {
         'onlinetime':'',
         'country':_country,
         'profile':'',
+        'callrate':'10'
 
       };
       await documentReference.setData(info).whenComplete(() {

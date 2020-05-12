@@ -22,6 +22,7 @@ class CallUtils {
       receiverName: to.name,
       receiverPic: to.profilePhoto,
       channelId: Random().nextInt(1000).toString(),
+      callRate: to.callrate
     );
     bool callMade = await callMethods.makeCall(call: call);
     call.hasDialled = true;
@@ -29,7 +30,7 @@ class CallUtils {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CallScreen(call: call),
+            builder: (context) => CallScreen(call: call,from: from,),
           ));
     }
   }
