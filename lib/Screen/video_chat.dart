@@ -8,6 +8,7 @@ import 'package:zuci/constants/strings.dart';
 import 'package:zuci/models/user.dart';
 import 'package:zuci/provider/user_provider.dart';
 import 'package:zuci/resources/firebase_methods.dart';
+import 'package:zuci/utils/permissions.dart';
 
 class VideoChat extends StatefulWidget {
   @override
@@ -503,15 +504,18 @@ class _VideoChatState extends State<VideoChat> {
                                             .data["country"],
                                       );
                                       return GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => Audience(
-                                                      token: live.name,
-                                                    )),
-                                          );
-                                        },
+                                        onTap: () async => await Permissions
+                                                .cameraAndMicrophonePermissionsGranted()
+                                            ? Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Audience(
+                                                          token: live.name,
+                                                          uid: live.uid,
+                                                        )),
+                                              )
+                                            : {},
                                         child: Container(
                                           decoration: BoxDecoration(
                                             borderRadius:

@@ -63,12 +63,12 @@ class PickupScreen extends StatelessWidget {
                   onPressed: () async =>
                       await Permissions.cameraAndMicrophonePermissionsGranted()
                           ?
-//                      call.isvoicecall?Navigator.push(
-//                        context,
-//                        MaterialPageRoute(
-//                          builder: (context) => audio_call_screen(call: call),
-//                        ),
-//                      ):
+                      call.isvoicecall?Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => audio_call_screen(call: call),
+                        ),
+                      ):
                       Navigator.push(
                               context,
                               MaterialPageRoute(

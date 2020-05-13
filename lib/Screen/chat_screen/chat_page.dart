@@ -39,7 +39,8 @@ class _Chat_pageState extends State<Chat_page> {
   @override
   Widget build(BuildContext context) {
     userProvider = Provider.of<UserProvider>(context);
-    int min = callMethods.coinBalance(int.parse(userProvider.getUser.coin),int.parse(widget.receiver.callrate));
+//    int min = callMethods.coinBalance(int.parse(userProvider.getUser.coin),int.parse(widget.receiver.callrate));
+    int min=1;
     return PickupLayout(
       scaffold: Scaffold(
         backgroundColor: Colors.white,

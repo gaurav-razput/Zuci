@@ -47,8 +47,9 @@ class _NxtVideoChatState extends State<NxtVideoChat> {
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
     Size size = MediaQuery.of(context).size;
-    int min = callMethods.coinBalance(int.parse(userProvider.getUser.coin),
-        int.parse(widget.receiver.callrate));
+//    int min = callMethods.coinBalance(int.parse(userProvider.getUser.coin),
+//        int.parse(widget.receiver.callrate));
+    int min=1;
 
     return Scaffold(
       body: Stack(

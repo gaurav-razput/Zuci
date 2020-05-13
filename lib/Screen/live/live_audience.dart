@@ -1,3 +1,5 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
@@ -7,33 +9,37 @@ import 'package:zuci/callScreen/configs/agora_configs.dart';
 
 class Audience extends StatefulWidget {
   final token;
-  final name;
-  Audience({@required this.token,@required this.name});
+  final uid;
+  Audience({this.token,this.uid});
   @override
   _AudienceState createState() => _AudienceState();
 }
 
 class _AudienceState extends State<Audience> {
   static TextStyle textStyle = TextStyle(fontSize: 18, color: Colors.blue);
-  LiveMethod liveMethod=LiveMethod();
-  static final _users = <int>[];
-  final _infoStrings = <String>[];
-  bool muted = false;
+  LiveMethod liveMethod =LiveMethod();
+  StreamSubscription liveStreamSubscription;
+  addPostFrameLiveback() {
+      liveStreamSubscription = liveMethod
+          .callStream(uid:widget.uid)
+          .listen((DocumentSnapshot ds) {
+        switch (ds.data) {
+          case null:
+            Navigator.pop(context);
+            break;
 
+          default:
+            break;
+        }
+      });
+
+  }
   @override
   void initState() {
     super.initState();
-    _handleCameraAndMicPermissions();
-//    _addAgoraEventHandlers();
+    addPostFrameLiveback();
     _initAgoraRtcEngine();
   }
-
-
-  _handleCameraAndMicPermissions() async {
-    await PermissionHandler().requestPermissions(
-        [PermissionGroup.camera, PermissionGroup.microphone]);
-  }
-
   Future<void> _initAgoraRtcEngine() async {
     AgoraRtcEngine.create(APP_ID);
     AgoraRtcEngine.enableVideo();
@@ -41,105 +47,16 @@ class _AudienceState extends State<Audience> {
     AgoraRtcEngine.setClientRole(ClientRole.Audience);
     AgoraRtcEngine.enableWebSdkInteroperability(true);
   }
-
-//  void _addAgoraEventHandlers() {
-//    AgoraRtcEngine.onError = (dynamic code) {
-//      setState(() {
-//        final info = 'onError: $code';
-//        _infoStrings.add(info);
-//      });
-//    };
-//
-//    AgoraRtcEngine.onJoinChannelSuccess = (
-//        String channel,
-//        int uid,
-//        int elapsed,
-//        ) {
-//      setState(() {
-//        final info = 'onJoinChannel: $channel, uid: $uid';
-//        _infoStrings.add(info);
-//      });
-//    };
-//
-//    AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
-//      setState(() {
-//        final info = 'onUserJoined: $uid';
-//        _infoStrings.add(info);
-//        _users.add(uid);
-//      });
-//    };
-//
-//    AgoraRtcEngine.onUpdatedUserInfo = (AgoraUserInfo userInfo, int i) {
-//      setState(() {
-//        final info = 'onUpdatedUserInfo: ${userInfo.toString()}';
-//        _infoStrings.add(info);
-//      });
-//    };
-//
-//    AgoraRtcEngine.onRejoinChannelSuccess = (String string, int a, int b) {
-//      setState(() {
-//        final info = 'onRejoinChannelSuccess: $string';
-//        _infoStrings.add(info);
-//      });
-//    };
-//
-//    AgoraRtcEngine.onUserOffline = (int a, int b) {
-////      liveMethod.endLive(widget.uid);
-//    Navigator.pop(context);
-//      setState(() {
-//        final info = 'onUserOffline: a: ${a.toString()}, b: ${b.toString()}';
-//        _infoStrings.add(info);
-//      });
-//    };
-//
-//    AgoraRtcEngine.onRegisteredLocalUser = (String s, int i) {
-//      setState(() {
-//        final info = 'onRegisteredLocalUser: string: s, i: ${i.toString()}';
-//        _infoStrings.add(info);
-//      });
-//    };
-//
-//    AgoraRtcEngine.onLeaveChannel = () {
-//      setState(() {
-//        _infoStrings.add('onLeaveChannel');
-//        _users.clear();
-//      });
-//    };
-//
-//    AgoraRtcEngine.onConnectionLost = () {
-//      setState(() {
-//        final info = 'onConnectionLost';
-//        _infoStrings.add(info);
-//      });
-//    };
-//
-//    AgoraRtcEngine.onUserOffline = (int uid, int reason) {
-//      // if call was picked
-//
-//      setState(() {
-//        final info = 'userOffline: $uid';
-//        _infoStrings.add(info);
-//        _users.remove(uid);
-//      });
-//    };
-//
-//    AgoraRtcEngine.onFirstRemoteVideoFrame = (
-//        int uid,
-//        int width,
-//        int height,
-//        int elapsed,
-//        ) {
-//      setState(() {
-//        final info = 'firstRemoteVideo: $uid ${width}x $height';
-//        _infoStrings.add(info);
-//      });
-//    };
-//  }
+  @override
+  void dispose() {
+    AgoraRtcEngine.leaveChannel();
+    AgoraRtcEngine.destroy();
+    liveStreamSubscription.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Container(
+    return  Container(
           child: Column(
             children: [
               Container(
@@ -147,13 +64,12 @@ class _AudienceState extends State<Audience> {
                 child: AgoraRtcEngine.createNativeView( (viewId) {
                   AgoraRtcEngine.setupRemoteVideo(
                       viewId, VideoRenderMode.Fit, 1);
-                  AgoraRtcEngine.joinChannel(null, widget.token, null, 1);
+                  AgoraRtcEngine.joinChannel( null,widget.token, null, 1);
                 }),
               ),
             ],
           ),
-        ),
-      ),
-    );
+        );
+
   }
 }

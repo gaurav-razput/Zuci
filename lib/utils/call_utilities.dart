@@ -22,7 +22,8 @@ class CallUtils {
       receiverName: to.name,
       receiverPic: to.profilePhoto,
       channelId: Random().nextInt(1000).toString(),
-      callRate: to.callrate
+      callRate: to.callrate,
+      isvoicecall: false,
     );
     bool callMade = await callMethods.makeCall(call: call);
     call.hasDialled = true;
@@ -43,6 +44,7 @@ class CallUtils {
       receiverName: to.name,
       receiverPic: to.profilePhoto,
       channelId: Random().nextInt(1000).toString(),
+      isvoicecall: true,
     );
     bool callMade = await callMethods.makeCall(call: call);
     call.hasDialled = true;

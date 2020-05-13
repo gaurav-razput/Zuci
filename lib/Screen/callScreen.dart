@@ -35,18 +35,13 @@ class _CallScreenState extends State<CallScreen> {
   static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
-//  @override
-//  void dispose() {
-//    _timer.cancel();
-//    super.dispose();
-//  }
   @override
   void initState() {
     super.initState();
     userjoin=false;
     addPostFrameCallback();
     initializeAgora();
-    _sec = (int.parse(widget.from.coin)/int.parse(widget.call.callRate)).round()*60;
+//    _sec = (int.parse(widget.from.coin)/int.parse(widget.call.callRate)).round()*60;
   }
 
   Future<void> initializeAgora() async {
