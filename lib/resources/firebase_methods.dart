@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -158,7 +157,7 @@ class FirebaseMethods {
       .snapshots();
   Stream<QuerySnapshot> fetchHistory({String userId}) => _userCollection
       .document(userId)
-      .collection(HISTORY_COLLECTION)
+      .collection(HISTORY_COLLECTION).orderBy('time')
       .snapshots();
 
   DocumentReference getContactsDocument({String of, String forContact}) =>
@@ -303,27 +302,11 @@ class FirebaseMethods {
         .collection(SUBSCRIPTION_COLLECTION)
         .document(to)
         .get();
-    print('is subscribe${document.exists}');
     if (document.exists) {
       return true;
     }
     return false;
   }
-
-//  void uploadImage(File image, String receiverId, String senderId,
-//      ImageUploadProvider imageUploadProvider) async {
-//    // Set some loading value to db and show it to user
-//    imageUploadProvider.setToLoading();
-//
-//    // Get url from the image bucket
-//    String url = await uploadImageToStorage(image);
-//
-//    // Hide loading
-//    imageUploadProvider.setToIdle();
-//
-//    setImageMsg(url, receiverId, senderId);
-//  }
-
   Future<void> editprofile(uid, name, age, bio, onlinetime, callrate, country, no, pic) {
     Firestore.instance.collection('USER').document('$uid').updateData({
       'name': '$name',
